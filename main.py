@@ -10,27 +10,20 @@ import os
 g_filepath = ''
 g_userdata = {}
 g_username = ''
+g_mon = {'朱蛤': {"hp": 100, "skill": {'毒雨': [30, 50]}},
+         '野猴': {"hp": 150, "skill": {'灵猴探宝': [60, 90]}}
+         }
 
 
-def init():
+def get_monster():
     pass
 
 
-def read_file():
-    # 设定全局变量
-    # global g_filepath
-    # global g_username
-    # global g_userdata
-    # global g_mon
-    with open(gol.get_value(g_filepath), 'rb') as f:
-        g_userdata = json.load(f)
-        # print('重新读档成功。您当前经验值为%d，等级为%d，血量为%d' % (g_userdata['exp'], g_userdata['level'], g_userdata['hp']))
-        if not g_userdata or g_filepath == '' or g_filepath == '':  # 如果全局变量设置失败或者序列化失败
-            raise ValueError('读档时出现错误！')
+def check_update():
+    pass
 
 
 if __name__ == '__main__':
-    init()
     gol.init()  # 首先初始化全局变量获取模块
     while 1:
         t = input('输入1读取存档，输入2新建存档:')
@@ -57,28 +50,30 @@ if __name__ == '__main__':
                 print('此昵称已被注册！')
                 continue
             else:
-                # g_userdata = {'name': name, 'exp': 0, 'level': 0, 'hp': 100, 'lastrest': 0}  # lastrest为上次休息的时间
                 g_userdata = {'money': 1000,
                               'hero': {'云天河':
                                            {"exp": 0,
+                                            "hp": 100,
                                             "level": 0,
                                             "euqip": {"木剑": [30, 50]},
-                                            "skill": {"yeqiuquan": [100, 200]}
+                                            "skill": {"落星式": [100, 200], "膝裂": [100, 200]}
                                             }
                                        }
                               }  # 'exp': 0,'name': name,
 
                 g_filepath = t_filepath
                 with open(g_filepath, 'w') as f:
-                    json.dump(g_userdata, f) # , ensure_ascii=False
+                    json.dump(g_userdata, f)
                     # TODO:json.dump会有奇怪的错误
-                    # a = json.dumps(g_userdata)
-                    # print(type(a))
-                    # f.write(a)
-                g_username = name
-                if not g_userdata or g_filepath == '' or g_username == '':  # 如果全局变量设置失败或者序列化失败
-                    raise ValueError('进入游戏时出现错误！')
+                    g_username = name
+                    if not g_userdata or g_filepath == '' or g_username == '':  # 如果全局变量设置失败或者序列化失败
+                        raise ValueError('进入游戏时出现错误！')
                 print(f'欢迎您，{g_username}!')
                 break
 
     # 读取或新建存档成功，进入游戏
+    while 1:
+        # TODO:要可以读取任意时间的存档
+        t = input('输入1开始打怪，输入2查看背包，输入3查看自身装备，输入4查看角色属性，输入5存档，输入6读档，输入7退出游戏')
+        if t == '1':
+            mon = get_monster()

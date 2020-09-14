@@ -25,6 +25,14 @@ class Monster(object):
     def attackdict(self):
         return self._attackdict
 
+    # 减HP
+    def minushp(self, h):
+        self._hp -= h
+
+    # 加HP
+    def addhp(self, h):
+        self._hp += h
+
     # 物理攻击
     def normalattack(self):
         # 随机选择一种物理攻击
