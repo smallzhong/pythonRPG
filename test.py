@@ -14,21 +14,21 @@ class TestItem(unittest.TestCase):
         else:
             self.assertTrue(False)
         # self.assertTrue(m.attack() >= 100 and m.attack() <= 200)  # 测试两次
-# def test_init(self):
-#     a = Item('雪糕', amount=100, outDateTime=5)
-#     self.assertEqual(a.outDateTime, 5)
-#
-# def test_ValueError(self):
-#     a = Item('雪糕', amount=100, outDateTime=-1)
-#     with self.assertRaises(ValueError):
-#         a.outDateTime = -1
-#     with self.assertRaises(ValueError):
-#         a.amount = 'a'
-#
-# def test_AttributeError(self):
-#     a = Item('雪糕', amount=100, outDateTime=-1)
-#     with self.assertRaises(AttributeError):
-#         a.inTime = 123
+    # def test_init(self):
+    #     a = Item('雪糕', amount=100, outDateTime=5)
+    #     self.assertEqual(a.outDateTime, 5)
+    #
+    # def test_ValueError(self):
+    #     a = Item('雪糕', amount=100, outDateTime=-1)
+    #     with self.assertRaises(ValueError):
+    #         a.outDateTime = -1
+    #     with self.assertRaises(ValueError):
+    #         a.amount = 'a'
+    #
+    # def test_AttributeError(self):
+    #     a = Item('雪糕', amount=100, outDateTime=-1)
+    #     with self.assertRaises(AttributeError):
+    #         a.inTime = 123
 
 
 # if __name__ == '__main__':
