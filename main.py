@@ -10,16 +10,31 @@ import os
 g_filepath = ''
 g_userdata = {}
 g_username = ''
-g_mon = {'朱蛤': {"hp": 100, "skill": {'毒雨': [30, 50]}},
-         '野猴': {"hp": 150, "skill": {'灵猴探宝': [60, 90]}}
-         }
+g_mon = [
+    {
+        '朱蛤': {"hp": 100, "skill": {'毒雨': [30, 50]}},
+        '野猴': {"hp": 150, "skill": {'灵猴探宝': [60, 90]}}
+    },
+    {
+        '花斑虎': {"hp": 300, "skill": {'虎啸山林': [100, 150]}},
+        '赤蜘蛛': {"hp": 400, "skill": {'毒焰': [200, 250]}}
+    }
+]
 
 
+# 根据当前等级 **随机** 挑选怪物
 def get_monster():
-    pass
+    global g_mon  # 获取全局变量
+    global g_userdata
+
+    d = g_mon[g_userdata['level']]
+    key = random.choice(list(d.keys()))
+    value = d.get(key)
+    return value
 
 
-def check_update():
+# 检查是否升级
+def check_updgrade():
     pass
 
 
@@ -51,6 +66,8 @@ if __name__ == '__main__':
                 continue
             else:
                 g_userdata = {'money': 1000,
+                              'exp': 0,  # 这里加上一个总体的经验吧，可以用来设定不同难度的怪物
+                              'level': 0,  # 总体的等级
                               'hero': {'云天河':
                                            {"exp": 0,
                                             "hp": 100,
