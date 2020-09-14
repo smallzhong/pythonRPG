@@ -15,7 +15,7 @@ attackDict:攻击技能和相应的伤害,攻击时随机挑选技能
 class Fighter(object):
     def __init__(self, **kwargs):
         self._hp = kwargs['hp']
-        self._attackdict = kwargs['skills']
+        self._attackdict = kwargs['skill']
         self._equip = kwargs['equip']
         # self._level = kwargs['level']
 

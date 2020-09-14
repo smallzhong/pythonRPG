@@ -76,7 +76,7 @@ if __name__ == '__main__':
                                           "exp": 0,
                                           "hp": 100,
                                           "level": 0,
-                                          "euqip": {"木剑": [30, 50]},
+                                          "equip": {"木剑": [30, 50]},
                                           "skill": {"落星式": [100, 200], "膝裂": [100, 200]}
                                       }
                               }
@@ -105,4 +105,5 @@ if __name__ == '__main__':
             if a not in g_userdata['hero']:
                 print('武将未找到!')
                 continue
-            fighter = Fighter(g_userdata['hero'][a])
+            print(g_userdata['hero'][a])
+            fighter = Fighter(**g_userdata['hero'][a])
