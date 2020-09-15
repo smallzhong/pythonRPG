@@ -210,7 +210,7 @@ if __name__ == '__main__':
     # 读取或新建存档成功，进入游戏
     while 1:
         # TODO:要可以读取任意时间的存档
-        t = input('输入1开始打怪，输入2查看背包，输入3查看自身装备，输入4进入商店，输入5查看武将状态，输入6存档，输入7读档，输入8退出游戏')
+        t = input('输入1开始打怪，输入2查看背包，输入3查看或修改武将装备，输入4进入商店，输入5查看武将状态，输入6存档，输入7读档，输入8退出游戏')
         if t == '1':
             mon = get_monster()
             # print(mon)
@@ -263,13 +263,41 @@ if __name__ == '__main__':
                 continue
             else:
                 print(f'\t当前背包内共有{len(g_userdata["backpack"])}件物品')
-                ct = 1
+                ct = 0  # 下标从0开始吧，后面更换装备的时候也是
                 for i in g_userdata['backpack']:
                     print(f'\t{ct}.{i["name"]}，出售价格{i["price"] // 2}，伤害区间{i["hurt"][0]}~{i["hurt"][1]}')
                     ct += 1
 
         elif t == '3':
-            pass
+            try:
+                while 1:
+                    t1 = input('输入1查看所有武将的装备，输入2更换云天河的装备，输入3退出..(其他武将待添加)')
+                    if t1 == '1':
+                        for i in g_userdata['hero'].values():
+                            print(
+                                f'角色：{i["name"]}，装备：{list(i["equip"].keys())[0]}，'
+                                f'伤害加成：{i["equip"][list(i["equip"].keys())[0]][0]}~'
+                                f'{i["equip"][list(i["equip"].keys())[0]][1]}')
+                    elif t1 == '2':
+                        print(f'\t当前背包内共有{len(g_userdata["backpack"])}件物品')
+                        ct = 0
+                        for i in g_userdata['backpack']:
+                            print(f'\t{ct}.{i["name"]}，出售价格{i["price"] // 2}，伤害区间{i["hurt"][0]}~{i["hurt"][1]}')
+                            ct += 1
+                        t2 = int(input('请输入您要装备的装备编号:'))
+                        if t2 < 0 or t2 >= len(g_userdata['backpack']):
+                            print('输入错误！')
+                            continue
+                        else:
+                            g_userdata['hero']['云天河']['equip'] = {
+                                g_userdata['backpack'][t2]['name']: g_userdata['backpack'][t2]['hurt']}
+                            print(f"更换装备成功！云天河的装备已被成功换成{g_userdata['backpack'][t2]['name']}！")
+                    elif t1 == '3':
+                        raise BreakPointException
+                    else:
+                        continue
+            except BreakPointException:
+                pass
 
         elif t == '4':
             get_in_store()
