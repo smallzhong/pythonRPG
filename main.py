@@ -41,7 +41,7 @@ def get_in_store():
     print(f'{g_username}，欢迎来到商店！您当前共有{g_userdata["money"]}金币。', end='')
     try:
         while 1:
-            t = input('输入1查看商店商品，输入2购买商品，输入3离开商店')
+            t = input('输入1查看商店商品，输入2购买商品，输入3购买八公山豆腐(回精回气),输入4离开商店')
             if t == '1':
                 print(f'\t当前商店共有{len(g_equip)}件商品')
                 for i in g_equip:
@@ -73,6 +73,30 @@ def get_in_store():
                 except BreakPointException:
                     pass
             elif t == '3':
+                try:
+                    while 1:
+                        t2 = input(f'购买八公山豆腐将消耗200金币，恢复200精和100气，'
+                                   f'您当前金币数为{g_userdata["money"]}，是否确认购买？1.确认购买，2.放弃购买')
+                        if t2 == '1':
+                            if g_userdata['money'] >= 200:
+                                g_userdata['money'] -= 200
+                                # TODO：到时候要可以选择喂给哪个武将
+                                g_userdata['hero']['云天河']['hp'] += 200
+                                g_userdata['hero']['云天河']['qi'] += 100
+                                print(f"购买成功，当前云天河精为{g_userdata['hero']['云天河']['hp']}，"
+                                      f"气为{g_userdata['hero']['云天河']['qi']}，"
+                                      f"剩余金钱为{g_userdata['money']}")
+                                raise BreakPointException
+                            else:
+                                print('您没有足够的金币！')
+                                raise BreakPointException
+                        elif t2 == '2':
+                            raise BreakPointException
+                        else:
+                            continue
+                except BreakPointException:
+                    pass
+            elif t == '4':
                 raise BreakPointException
             else:
                 continue
