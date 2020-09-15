@@ -17,6 +17,11 @@ class Monster(object):
         self._hp = kwargs['hp']
         self._attackdict = kwargs['skill']
         self._qi = kwargs['qi']
+        self._name = kwargs['name']
+
+    @property
+    def name(self):
+        return self._name
 
     @property
     def qi(self):

@@ -2,6 +2,7 @@ import random
 import time
 import json
 import pickle
+from my_exceptions import BreakPointException
 from monster import Monster
 import gol
 import os
@@ -13,12 +14,12 @@ g_userdata = {}
 g_username = ''
 g_mon = [
     {
-        '朱蛤': {"qi": 50, "level": 0, "hp": 100, "skill": {'毒雨': [30, 50]}},
-        '野猴': {"qi": 50, "level": 0, "hp": 150, "skill": {'灵猴探宝': [60, 90]}}
+        '朱蛤': {"name": "朱蛤", "qi": 50, "level": 0, "hp": 100, "skill": {'毒雨': [30, 50]}, "cost": {'毒雨': 30}},
+        '野猴': {"name": "野猴", "qi": 50, "level": 0, "hp": 150, "skill": {'灵猴探宝': [60, 90]}, "cost": {'灵猴探宝': 30}}
     },
     {
-        '花斑虎': {"qi": 70, "level": 1, "hp": 300, "skill": {'虎啸山林': [100, 150]}},
-        '赤蜘蛛': {"qi": 70, "level": 1, "hp": 400, "skill": {'毒焰': [200, 250]}}
+        '花斑虎': {"qi": 70, "level": 1, "hp": 300, "skill": {'虎啸山林': [100, 150]}, "cost": {'虎啸山林': 50}},
+        '赤蜘蛛': {"qi": 70, "level": 1, "hp": 400, "skill": {'毒焰': [200, 250]}, "cost": {'毒焰': 60}}
     }
 ]
 
@@ -73,11 +74,13 @@ if __name__ == '__main__':
                               'hero': {
                                   '云天河':
                                       {
+                                          "name": "云天河",
                                           "exp": 0,
                                           "hp": 100,
                                           "level": 0,
                                           "equip": {"木剑": [30, 50]},
                                           "skill": {"落星式": [100, 200], "膝裂": [100, 200]},
+                                          "cost": {"落星式": 25, "膝裂": 40},
                                           "qi": 100
                                       }
                               }
@@ -115,4 +118,6 @@ if __name__ == '__main__':
             print(f'战斗开始，{a}({g_userdata["hero"][a]["level"]}级)对阵{mon[0]}({mon[1]["level"]}级)!')
             while not battle.done():
                 print(
-                    f'战斗进行中，{a}剩余{battle.fighter.hp}精，剩余{battle.fighter.qi}气，{mon[0]}剩余{battle.monster.hp}精，剩余{battle.monster.qi}气')
+                    f'战斗进行中，{a}剩余{battle.fighter.hp}精，剩余{battle.fighter.qi}气，'
+                    f'{mon[0]}剩余{battle.monster.hp}精，剩余{battle.monster.qi}气')
+                battle.move()

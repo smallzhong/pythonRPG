@@ -18,7 +18,18 @@ class Fighter(object):
         self._attackdict = kwargs['skill']
         self._equip = kwargs['equip']
         self._qi = kwargs['qi']
+        self._name = kwargs['name']
+        self._cost = kwargs['cost']
         # self._level = kwargs['level']
+
+    @property
+    def cost(self):
+        return self._cost
+
+    @property
+    def name(self):
+        return self._name
+
     @property
     def qi(self):
         return self._qi
