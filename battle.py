@@ -1,3 +1,4 @@
+'战斗类，用来进行战斗和返回战斗的结果'
 from monster import Monster
 import random
 import json
@@ -26,7 +27,35 @@ class Battle(object):
 
     # 武将用技能攻击怪物
     def fighterSkillAttackMonster(self):
-        pass
+        try:
+            while 1:
+                # print(f'getequipaddition(){self.fighter.getequipaddition()}')
+                # 如果正确就raise一个BreakPointException退出循环
+                # 用来实现类似GOTO的功能
+                print(f'当前是{self.fighter.name}的回合，请选择出招：')
+                for i in self.fighter.attackdict.items():  # 获取武将的所有招数
+                    # TODO：这里要让用户可以用数字来选择出招
+                    print(f'{i[0]}:需要{self.fighter.cost[i[0]]}气')
+                c = input('请输入您想要出的招数')
+                if c not in self.fighter.cost:
+                    print('此技能不存在！请重新输入！')
+                # 如果不够气，继续选择
+                if self.fighter.cost[c] > self.fighter.qi:
+                    print(f'气不足，{self.fighter.name}剩余{self.fighter.qi}气，不足以发动{c}技能！')
+                    continue
+                else:
+                    raise BreakPointException
+        except BreakPointException:
+            pass
+
+        self.fighter.minusqi(self.fighter.cost[c])  # 减气
+
+        equipaddition = self.fighter.getequipaddition()
+        basehurt = int(random.uniform(self.fighter.attackdict[c][0], self.fighter.attackdict[c][1]))
+        totalhurt = equipaddition + basehurt
+        self.monster.minushp(totalhurt)
+        print(f'云天河发动{c}技能对{self.monster.name}造成{totalhurt}点伤害')
+        # self.monster.minushp(self.fighter.attackdict[c])
 
     def monsterSkillAttackFighter(self):
         pass
@@ -42,7 +71,8 @@ class Battle(object):
 
     # 怪物普攻武将
     def monsterNormalAttackFigher(self):
-        totalHurt = self.monster.level * 50 + 50
+        totalHurt = (self.monster.level + 1) * 50 + int(
+            random.uniform(-40, 40)) * (self.monster.level + 1)  # (level + 1) * 50 + rand(-20, 20) * (level + 1)
         self.fighter.minushp(totalHurt)
         time.sleep(1)
         print(f'\t{self.monster.name}对{self.fighter.name}发动普通攻击造成了{totalHurt}点伤害')
@@ -51,54 +81,70 @@ class Battle(object):
     def move(self):
         # 武将回合
         if self.__turn == 'f':
+            if self.isdone():
+                return False
             time.sleep(1)
-            t = input('武将回合，请输入选择，1普通攻击，2技能攻击（消耗气），3技能补血（消耗气），4逃跑（一定概率失败）')
+            t = input('武将回合，请输入选择，1普通攻击，2技能攻击（消耗气），3技能补血（消耗气），4逃跑（一定概率失败），输入其他进行查看双方状态')
 
             if t == '1':
                 self.fighterNormalAttackMonster()
                 # TODO：攻速？
                 self.__turn = 'm'
+                return True
 
             elif t == '2':
-                try:
-                    while 1:
-                        print(f'getequipaddition(){self.fighter.getequipaddition()}')
-                        # 如果正确就raise一个BreakPointException退出循环
-                        # 用来实现类似GOTO的功能
-                        print(f'当前是{self.fighter.name}的回合，请选择出招：')
-                        for i in self.fighter.attackdict.items():  # 获取武将的所有招数
-                            # TODO：这里要让用户可以用数字来选择出招
-                            print(f'{i[0]}:需要{self.fighter.cost[i[0]]}气')
-                        c = input('请输入您想要出的招数')
-                        if c not in self.fighter.cost:
-                            print('此技能不存在！请重新输入！')
-                        else:
-                            raise BreakPointException
-                except BreakPointException:
-                    pass
-
                 self.fighterSkillAttackMonster()
+                self.__turn = 'm'
+                return True
 
+            elif t == '3':
+                # TODO:
+                self.__turn = 'm'
+                return True
+
+            else:
+                return True  # 如果输入错误也返回True，重新进行回合
 
         elif self.__turn == 'm':
             # TODO:这里要随机挑选技能攻击或者普通攻击
+            if self.isdone():
+                return False
             time.sleep(1)
-            print(f'\t怪物回合，{self.monster.name}进行普通攻击')
+            print(f'怪物回合，{self.monster.name}进行普通攻击')
             self.monsterNormalAttackFigher()
             self.__turn = 'f'  # 到武将的回合3
+            return True
             # print(f'当前是{self.monster.name}的回合，请选择出招：')
         else:
             raise ValueError('self.__turn设置错误！')
 
-    # 判断战斗是否结束
-    def done(self):
-        if self._monster.hp == 0:
+    # 判断战斗是否结束，如果任一方的HP小于0，说明战斗结束
+    def isdone(self):
+        if self._monster.hp <= 0:
             return True
-        elif self._fighter.hp == 0:
+        elif self._fighter.hp <= 0:
             return True
         else:
             return False
 
     # 返回战斗结果
     def res(self):
-        pass
+        # TODO:这里要返回战斗的结果
+        if self.monster.hp <= 0:
+            winner = 'fighter'
+            name = self.monster.name
+        elif self.fighter.hp <= 0:
+            winner = 'monster'
+            name = self.fighter.name
+        else:
+            raise ValueError('战斗未结束即返回，出现错误！')
+
+        fighterhp = self.fighter.hp
+        fighterqi = self.fighter.qi
+
+        return {
+            "winner": winner,  # 胜利者是武将还是怪物
+            "name": name,
+            "fighterhp": fighterhp,  # 结束后武将剩余的精
+            "fighterqi": fighterqi  # 结束后武将剩余的气
+        }

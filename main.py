@@ -40,6 +40,39 @@ def check_updgrade():
     pass
 
 
+# 读档操作
+def read_file(t_filepath):
+    # TODO:封装读档操作
+    global g_filepath
+    global g_userdata
+    global g_username
+    global g_mon
+    if not os.path.exists(t_filepath):
+        print('读取存档失败！查无此存档！')
+        return False  # 读取存档失败返回False
+    else:
+        with open(g_filepath, 'rb') as f:
+            g_userdata = json.load(f)
+            if not g_userdata or g_filepath == '' or g_username == '':  # 如果全局变量设置失败或者序列化失败
+                raise ValueError('读档时出现错误！')
+        print(f'欢迎您，{g_username}!')
+        return True
+
+
+# 存档操作
+def save_file():
+    global g_filepath
+    global g_userdata
+    global g_username
+    global g_mon
+    with open(g_filepath, 'w') as f:
+        json.dump(g_userdata, f)
+        # TODO:json.dump会有奇怪的错误
+        g_username = name
+        if not g_userdata or g_filepath == '' or g_username == '':  # 如果全局变量设置失败或者序列化失败
+            raise ValueError('进入游戏时出现错误！')
+
+
 if __name__ == '__main__':
     gol.init()  # 首先初始化全局变量获取模块
     while 1:
@@ -47,18 +80,12 @@ if __name__ == '__main__':
         if t == '1':
             name = input('请输入您要读取的存档中玩家的姓名')
             t_filepath = 'f:\\' + name + '.txt'  # TODO:这里可以更改保存的路径
-            if not os.path.exists(t_filepath):
-                print('读取存档失败！查无此存档！')
-                continue
-            else:
-                g_filepath = t_filepath
-                g_username = name
-                with open(g_filepath, 'rb') as f:
-                    g_userdata = json.load(f)
-                    if not g_userdata or g_filepath == '' or g_username == '':  # 如果全局变量设置失败或者序列化失败
-                        raise ValueError('读档时出现错误！')
-                print(f'欢迎您，{g_username}!')
+            g_filepath = t_filepath
+            g_username = name
+            if read_file(t_filepath):
                 break
+            else:
+                continue
 
         elif t == '2':
             name = input('请输入您的昵称')
@@ -87,12 +114,7 @@ if __name__ == '__main__':
                               }  # 'exp': 0,'name': name,
 
                 g_filepath = t_filepath
-                with open(g_filepath, 'w') as f:
-                    json.dump(g_userdata, f)
-                    # TODO:json.dump会有奇怪的错误
-                    g_username = name
-                    if not g_userdata or g_filepath == '' or g_username == '':  # 如果全局变量设置失败或者序列化失败
-                        raise ValueError('进入游戏时出现错误！')
+                save_file()
                 print(f'欢迎您，{g_username}!')
                 break
 
@@ -115,10 +137,35 @@ if __name__ == '__main__':
             # print(mon[1])
             monster = Monster(**mon[1])
             battle = Battle(monster, fighter)  # 创建战斗对象
-            print(f'战斗开始，{a}({g_userdata["hero"][a]["level"]}级)对阵{mon[0]}({mon[1]["level"]}级)!')
-            while not battle.done():
+            print(f'战斗开始，{a}({g_userdata["hero"][a]["level"]}级)对阵{mon[0]}({mon[1]["level"]}级)！'
+                  f'{a}剩余{battle.fighter.hp}精，剩余{battle.fighter.qi}气，'
+                  f'{mon[0]}剩余{battle.monster.hp}精，剩余{battle.monster.qi}气')
+            # while not battle.done():
+            #     battle.move()
+            while battle.move():  # 如果返回False表明战斗结束
                 time.sleep(1)
                 print(
                     f'\t战斗进行中，{a}剩余{battle.fighter.hp}精，剩余{battle.fighter.qi}气，'
                     f'{mon[0]}剩余{battle.monster.hp}精，剩余{battle.monster.qi}气')
-                battle.move()
+
+            # 战斗结束后获取战斗结果，进行加气、判断升级等操作
+            res = battle.res()
+            print(f'战斗结束！{res["name"]}胜利！', end='')
+            if res['winner'] == 'monster':
+                print('您被打败了！即将重新读档！')
+                if read_file(g_filepath):  # 重新读档
+                    print('重新读档成功。')
+                else:
+                    raise ValueError('重新读档失败！！可能是由于存档文件被破坏')
+            else:
+                # 战斗胜利，加精加气加经验
+                g_userdata['exp'] += (g_userdata['level'] + 1) * 50  # 加经验(level + 1) * 50
+                g_userdata['qi'] += (g_userdata['level'] + 1) * 10  # 加气(level + 1) * 10
+                g_userdata['hp'] += (g_userdata['level'] + 1) * 50  # 加精(level + 1) * 50
+                check_updgrade()
+
+        elif t == '2':
+            pass
+
+        else:
+            pass

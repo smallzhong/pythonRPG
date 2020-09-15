@@ -70,6 +70,14 @@ class Fighter(object):
     def addhp(self, h):
         self._hp += h
 
+    # 减气
+    def minusqi(self, h):
+        self._qi -= h
+
+    # 加气
+    def addqi(self, h):
+        self._qi += h
+
     # 物理攻击
     def normalattack(self):
         # 随机选择一种物理攻击
