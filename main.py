@@ -8,6 +8,7 @@ import gol
 import os
 from fighter import Fighter
 from battle import Battle
+import sys
 
 g_filepath = ''
 g_userdata = {}
@@ -37,18 +38,30 @@ def get_monster():
     return t_key, value
 
 
+def print_info():
+    global g_filepath
+    global g_userdata
+    global g_username
+    global g_mon
+    print(f'\t当前整体等级：{g_userdata["level"]}，经验值：{g_userdata["exp"]}，金钱数{g_userdata["money"]}')
+    for key in g_userdata['hero']:
+        print(f'\t{g_userdata["hero"][key]["name"]}当前状态：精：{g_userdata["hero"][key]["hp"]}，'
+              f'气：{g_userdata["hero"][key]["qi"]}，等级：{g_userdata["hero"][key]["level"]}，'
+              f'经验值：{g_userdata["hero"][key]["exp"]}')
+
 # 检查是否升级
 def check_updgrade():
     global g_filepath
     global g_userdata
     global g_username
     global g_mon
-    levelUpRequire = 100  # 100经验升一级
+    levelUpRequire = 300  # 300经验升一级
     if g_userdata['level'] * levelUpRequire < g_userdata['exp']:
         levels_up = (g_userdata['exp'] - g_userdata['level'] * levelUpRequire) // levelUpRequire + 1
         # 更新信息
         g_userdata['level'] += levels_up
-        print('\t您升了%d级！当前级数为%d' % (levels_up, g_userdata['level']))
+        g_userdata['money'] += g_userdata['level'] * 1000  # 升到1级增加1000金币，2级增加2000，以此类推
+        print('\t您升了%d级！当前级数为%d，金钱数为%d' % (levels_up, g_userdata['level'], g_userdata['money']))
 
     for key in g_userdata['hero'].keys():
         if g_userdata['hero'][key]['level'] * levelUpRequire < g_userdata['hero'][key]['exp']:
@@ -127,7 +140,7 @@ if __name__ == '__main__':
                                           "hp": 100,
                                           "level": 0,
                                           "equip": {"木剑": [30, 50]},
-                                          "skill": {"落星式": [100, 200], "膝裂": [100, 200]},
+                                          "skill": {"落星式": [100, 200], "膝裂": [200, 300]},
                                           "cost": {"落星式": 25, "膝裂": 40},
                                           "qi": 100
                                       }
@@ -192,10 +205,17 @@ if __name__ == '__main__':
             pass
 
         elif t == '4':
-            for key in g_userdata['hero']:
-                print(f'\t{g_userdata["hero"][key]["name"]}当前状态：精：{g_userdata["hero"][key]["hp"]}，'
-                      f'气：{g_userdata["hero"][key]["qi"]}，等级：{g_userdata["hero"][key]["level"]}，'
-                      f'经验值：{g_userdata["hero"][key]["exp"]}')
+            print_info()
 
+        elif t == '5':
+            save_file()
+            print(f'存档成功！')
+
+        elif t == '6':
+            read_file(g_filepath)
+            print_info()
+
+        elif t == '7':
+            sys.exit(0)
         else:
             pass

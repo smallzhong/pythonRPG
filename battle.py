@@ -102,6 +102,12 @@ class Battle(object):
                 self.__turn = 'm'
                 return True
 
+            elif t == '4':
+                # TODO:增加随机逃跑方法
+                print('逃跑失败！')
+                self.__turn = 'm'
+                return True
+
             else:
                 return True  # 如果输入错误也返回True，重新进行回合
 
