@@ -25,6 +25,11 @@ g_mon = [
         '花斑虎': {"name": "花斑虎", "qi": 70, "level": 2, "hp": 500, "skill": {'虎啸山林': [200, 250]}, "cost": {'虎啸山林': 50}}
     }
 ]
+g_equip = [
+    {'name': '锋灵刃', "price": 500, "hurt": [60, 90]},
+    {'name': '玄瞑剑', 'price': 1200, 'hurt': [120, 150]},
+    {'name': '碎痕', 'price': 2100, 'hurt': [200, 240]}
+]
 
 
 # 根据当前等级 **随机** 挑选怪物
@@ -48,6 +53,7 @@ def print_info():
         print(f'\t{g_userdata["hero"][key]["name"]}当前状态：精：{g_userdata["hero"][key]["hp"]}，'
               f'气：{g_userdata["hero"][key]["qi"]}，等级：{g_userdata["hero"][key]["level"]}，'
               f'经验值：{g_userdata["hero"][key]["exp"]}')
+
 
 # 检查是否升级
 def check_updgrade():
@@ -155,7 +161,7 @@ if __name__ == '__main__':
     # 读取或新建存档成功，进入游戏
     while 1:
         # TODO:要可以读取任意时间的存档
-        t = input('输入1开始打怪，输入2查看背包，输入3查看自身装备，输入4查看武将状态，输入5存档，输入6读档，输入7退出游戏')
+        t = input('输入1开始打怪，输入2查看背包，输入3查看自身装备，输入4进入商店，输入5查看武将状态，输入6存档，输入7读档，输入8退出游戏')
         if t == '1':
             mon = get_monster()
             # print(mon)
@@ -201,21 +207,28 @@ if __name__ == '__main__':
                     res['fighterhp'] + (g_userdata['level'] + 1) * 50  # 加精(level + 1) * 50
                 check_updgrade()  # 判断是否升级
 
+        # 商店
         elif t == '2':
             pass
 
+        elif t == '3':
+            pass
+
         elif t == '4':
-            print_info()
+            pass
 
         elif t == '5':
+            print_info()
+
+        elif t == '6':
             save_file()
             print(f'存档成功！')
 
-        elif t == '6':
+        elif t == '7':
             read_file(g_filepath)
             print_info()
 
-        elif t == '7':
+        elif t == '8':
             sys.exit(0)
         else:
             pass
