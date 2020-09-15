@@ -13,9 +13,14 @@ attackDict:攻击技能和相应的伤害,攻击时随机挑选技能
 
 
 class Monster(object):
-    def __init__(self, hp, attackdict):
-        self._hp = hp
-        self._attackdict = attackdict
+    def __init__(self, **kwargs):
+        self._hp = kwargs['hp']
+        self._attackdict = kwargs['skill']
+        self._qi = kwargs['qi']
+
+    @property
+    def qi(self):
+        return self._qi
 
     @property
     def hp(self):

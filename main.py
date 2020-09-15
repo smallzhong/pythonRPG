@@ -8,18 +8,17 @@ import os
 from fighter import Fighter
 from battle import Battle
 
-# 云天河技能：野球拳
 g_filepath = ''
 g_userdata = {}
 g_username = ''
 g_mon = [
     {
-        '朱蛤': {"level": 0, "hp": 100, "skill": {'毒雨': [30, 50]}},
-        '野猴': {"level": 0, "hp": 150, "skill": {'灵猴探宝': [60, 90]}}
+        '朱蛤': {"qi": 50, "level": 0, "hp": 100, "skill": {'毒雨': [30, 50]}},
+        '野猴': {"qi": 50, "level": 0, "hp": 150, "skill": {'灵猴探宝': [60, 90]}}
     },
     {
-        '花斑虎': {"level": 1, "hp": 300, "skill": {'虎啸山林': [100, 150]}},
-        '赤蜘蛛': {"level": 1, "hp": 400, "skill": {'毒焰': [200, 250]}}
+        '花斑虎': {"qi": 70, "level": 1, "hp": 300, "skill": {'虎啸山林': [100, 150]}},
+        '赤蜘蛛': {"qi": 70, "level": 1, "hp": 400, "skill": {'毒焰': [200, 250]}}
     }
 ]
 
@@ -30,9 +29,9 @@ def get_monster():
     global g_userdata
 
     d = g_mon[g_userdata['level']]
-    key = random.choice(list(d.keys()))
-    value = d.get(key)
-    return key, value
+    t_key = random.choice(list(d.keys()))
+    value = d.get(t_key)
+    return t_key, value
 
 
 # 检查是否升级
@@ -78,7 +77,8 @@ if __name__ == '__main__':
                                           "hp": 100,
                                           "level": 0,
                                           "equip": {"木剑": [30, 50]},
-                                          "skill": {"落星式": [100, 200], "膝裂": [100, 200]}
+                                          "skill": {"落星式": [100, 200], "膝裂": [100, 200]},
+                                          "qi": 100
                                       }
                               }
                               }  # 'exp': 0,'name': name,
@@ -99,7 +99,7 @@ if __name__ == '__main__':
         t = input('输入1开始打怪，输入2查看背包，输入3查看自身装备，输入4查看角色属性，输入5存档，输入6读档，输入7退出游戏')
         if t == '1':
             mon = get_monster()
-            print(mon)
+            # print(mon)
             print('当前有如下武将:', end='')
             for key in g_userdata['hero'].keys():
                 print(key)
@@ -107,7 +107,12 @@ if __name__ == '__main__':
             if a not in g_userdata['hero']:
                 print('武将未找到!')
                 continue
-            print(g_userdata['hero'][a])
+            # print(g_userdata['hero'][a])
             fighter = Fighter(**g_userdata['hero'][a])  # 传入字典
-            battle = Battle(mon[1], fighter)  # 创建战斗对象
+            # print(mon[1])
+            monster = Monster(**mon[1])
+            battle = Battle(monster, fighter)  # 创建战斗对象
             print(f'战斗开始，{a}({g_userdata["hero"][a]["level"]}级)对阵{mon[0]}({mon[1]["level"]}级)!')
+            while not battle.done():
+                print(
+                    f'战斗进行中，{a}剩余{battle.fighter.hp}精，剩余{battle.fighter.qi}气，{mon[0]}剩余{battle.monster.hp}精，剩余{battle.monster.qi}气')

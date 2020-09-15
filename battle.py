@@ -25,5 +25,15 @@ class Battle(object):
     def monsterNormalAttackFigher(self):
         pass  # 怪物普攻武将
 
+    # 判断战斗是否结束
+    def done(self):
+        if self._monster.hp == 0:
+            return True
+        elif self._fighter.hp == 0:
+            return True
+        else:
+            return False
+
+    # 返回战斗结果
     def res(self):
-        pass  # 战斗结果
+        pass

@@ -17,7 +17,11 @@ class Fighter(object):
         self._hp = kwargs['hp']
         self._attackdict = kwargs['skill']
         self._equip = kwargs['equip']
+        self._qi = kwargs['qi']
         # self._level = kwargs['level']
+    @property
+    def qi(self):
+        return self._qi
 
     @property
     def hp(self):
