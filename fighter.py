@@ -20,7 +20,16 @@ class Fighter(object):
         self._qi = kwargs['qi']
         self._name = kwargs['name']
         self._cost = kwargs['cost']
-        # self._level = kwargs['level']
+        self._level = kwargs['level']
+        self._exp = kwargs['exp']
+
+    @property
+    def exp(self):
+        return self._exp
+
+    @property
+    def level(self):
+        return self._level
 
     @property
     def cost(self):
@@ -45,6 +54,13 @@ class Fighter(object):
     @property
     def attackdict(self):
         return self._attackdict
+
+    # 获取角色装备的加成
+    def getequipaddition(self):
+        for value in self.equip.values():
+            pass  # 获取当前装备的伤害
+        # 装备加成的范围内随机返回一值
+        return int(random.uniform(value[0], value[1] + 1))
 
     # 减HP
     def minushp(self, h):

@@ -117,7 +117,8 @@ if __name__ == '__main__':
             battle = Battle(monster, fighter)  # 创建战斗对象
             print(f'战斗开始，{a}({g_userdata["hero"][a]["level"]}级)对阵{mon[0]}({mon[1]["level"]}级)!')
             while not battle.done():
+                time.sleep(1)
                 print(
-                    f'战斗进行中，{a}剩余{battle.fighter.hp}精，剩余{battle.fighter.qi}气，'
+                    f'\t战斗进行中，{a}剩余{battle.fighter.hp}精，剩余{battle.fighter.qi}气，'
                     f'{mon[0]}剩余{battle.monster.hp}精，剩余{battle.monster.qi}气')
                 battle.move()
