@@ -132,10 +132,10 @@ class Battle(object):
         # TODO:这里要返回战斗的结果
         if self.monster.hp <= 0:
             winner = 'fighter'
-            name = self.monster.name
+            name = self.fighter.name
         elif self.fighter.hp <= 0:
             winner = 'monster'
-            name = self.fighter.name
+            name = self.monster.name
         else:
             raise ValueError('战斗未结束即返回，出现错误！')
 

@@ -14,12 +14,14 @@ g_userdata = {}
 g_username = ''
 g_mon = [
     {
-        '朱蛤': {"name": "朱蛤", "qi": 50, "level": 0, "hp": 100, "skill": {'毒雨': [30, 50]}, "cost": {'毒雨': 30}},
-        '野猴': {"name": "野猴", "qi": 50, "level": 0, "hp": 150, "skill": {'灵猴探宝': [60, 90]}, "cost": {'灵猴探宝': 30}}
+        '朱蛤': {"name": "朱蛤", "qi": 50, "level": 0, "hp": 100, "skill": {'毒雨': [30, 50]}, "cost": {'毒雨': 30}}
     },
     {
-        '花斑虎': {"qi": 70, "level": 1, "hp": 300, "skill": {'虎啸山林': [100, 150]}, "cost": {'虎啸山林': 50}},
-        '赤蜘蛛': {"qi": 70, "level": 1, "hp": 400, "skill": {'毒焰': [200, 250]}, "cost": {'毒焰': 60}}
+        '野猴': {"name": "野猴", "qi": 50, "level": 1, "hp": 300, "skill": {'灵猴探宝': [60, 90]}, "cost": {'灵猴探宝': 30}},
+        '赤蜘蛛': {"name": "赤蜘蛛", "qi": 70, "level": 1, "hp": 400, "skill": {'毒焰': [100, 150]}, "cost": {'毒焰': 60}}
+    },
+    {
+        '花斑虎': {"name": "花斑虎", "qi": 70, "level": 2, "hp": 500, "skill": {'虎啸山林': [200, 250]}, "cost": {'虎啸山林': 50}}
     }
 ]
 
@@ -37,10 +39,29 @@ def get_monster():
 
 # 检查是否升级
 def check_updgrade():
-    pass
+    global g_filepath
+    global g_userdata
+    global g_username
+    global g_mon
+    levelUpRequire = 100  # 100经验升一级
+    if g_userdata['level'] * levelUpRequire < g_userdata['exp']:
+        levels_up = (g_userdata['exp'] - g_userdata['level'] * levelUpRequire) // levelUpRequire + 1
+        # 更新信息
+        g_userdata['level'] += levels_up
+        print('\t您升了%d级！当前级数为%d' % (levels_up, g_userdata['level']))
+
+    for key in g_userdata['hero'].keys():
+        if g_userdata['hero'][key]['level'] * levelUpRequire < g_userdata['hero'][key]['exp']:
+            levels_up = (g_userdata['hero'][key]['exp'] - g_userdata['hero'][key][
+                'level'] * levelUpRequire) // levelUpRequire + 1
+            g_userdata['hero'][key]['level'] += levels_up
+            g_userdata['hero'][key]['hp'] += g_userdata['hero'][key]['level'] * 100  # 加level * 100点精
+            g_userdata['hero'][key]['qi'] += g_userdata['hero'][key]['level'] * 30  # 加level * 30点气
+            print(f'\t{key}升了{levels_up}级，当前级数为{g_userdata["hero"][key]["level"]}')
+
+    # 读档操作
 
 
-# 读档操作
 def read_file(t_filepath):
     # TODO:封装读档操作
     global g_filepath
@@ -121,7 +142,7 @@ if __name__ == '__main__':
     # 读取或新建存档成功，进入游戏
     while 1:
         # TODO:要可以读取任意时间的存档
-        t = input('输入1开始打怪，输入2查看背包，输入3查看自身装备，输入4查看角色属性，输入5存档，输入6读档，输入7退出游戏')
+        t = input('输入1开始打怪，输入2查看背包，输入3查看自身装备，输入4查看武将状态，输入5存档，输入6读档，输入7退出游戏')
         if t == '1':
             mon = get_monster()
             # print(mon)
@@ -150,7 +171,7 @@ if __name__ == '__main__':
 
             # 战斗结束后获取战斗结果，进行加气、判断升级等操作
             res = battle.res()
-            print(f'战斗结束！{res["name"]}胜利！', end='')
+            print(f'战斗结束！{res["name"]}胜利！')
             if res['winner'] == 'monster':
                 print('您被打败了！即将重新读档！')
                 if read_file(g_filepath):  # 重新读档
@@ -160,12 +181,21 @@ if __name__ == '__main__':
             else:
                 # 战斗胜利，加精加气加经验
                 g_userdata['exp'] += (g_userdata['level'] + 1) * 50  # 加经验(level + 1) * 50
-                g_userdata['qi'] += (g_userdata['level'] + 1) * 10  # 加气(level + 1) * 10
-                g_userdata['hp'] += (g_userdata['level'] + 1) * 50  # 加精(level + 1) * 50
-                check_updgrade()
+                g_userdata['hero'][res['name']]['exp'] += (g_userdata['level'] + 1) * 50  # 武将加经验(level + 1) * 50
+                g_userdata['hero'][res['name']]['qi'] = \
+                    res['fighterqi'] + (g_userdata['level'] + 1) * 10  # 加气(level + 1) * 10
+                g_userdata['hero'][res['name']]['hp'] = \
+                    res['fighterhp'] + (g_userdata['level'] + 1) * 50  # 加精(level + 1) * 50
+                check_updgrade()  # 判断是否升级
 
         elif t == '2':
             pass
+
+        elif t == '4':
+            for key in g_userdata['hero']:
+                print(f'\t{g_userdata["hero"][key]["name"]}当前状态：精：{g_userdata["hero"][key]["hp"]}，'
+                      f'气：{g_userdata["hero"][key]["qi"]}，等级：{g_userdata["hero"][key]["level"]}，'
+                      f'经验值：{g_userdata["hero"][key]["exp"]}')
 
         else:
             pass
