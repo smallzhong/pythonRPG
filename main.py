@@ -32,6 +32,53 @@ g_equip = [
 ]
 
 
+def get_in_store():
+    global g_filepath
+    global g_userdata
+    global g_username
+    global g_mon
+    global g_equip
+    print(f'{g_username}，欢迎来到商店！您当前共有{g_userdata["money"]}金币。', end='')
+    try:
+        while 1:
+            t = input('输入1查看商店商品，输入2购买商品，输入3离开商店')
+            if t == '1':
+                print(f'\t当前商店共有{len(g_equip)}件商品')
+                for i in g_equip:
+                    print(f'\t武器名：{i["name"]}，价格：{i["price"]}金币，伤害加成：{i["hurt"][0]}~{i["hurt"][1]}')
+            elif t == '2':
+                try:
+                    while 1:
+                        equipct = len(g_equip)
+                        print(f'\t当前商店共有{equipct}件商品')
+                        ct = 0
+                        for i in g_equip:
+                            print(f'\t{ct}.武器名：{i["name"]}，价格：{i["price"]}金币，伤害加成：{i["hurt"][0]}~{i["hurt"][1]}')
+                            ct += 1
+                        t1 = int(input('\t请输入您想要购买的武器的编号:'))
+                        if t1 < 0 or t1 >= equipct:
+                            print('编号输入错误！没有这件武器！')
+                            continue
+                        else:
+                            if g_userdata['money'] < g_equip[ct]['price']:
+                                print(f'您当前拥有的金币数为{g_userdata["money"]}，不足以购买{g_equip[ct]["name"]}！')
+                                continue
+                            else:
+                                g_userdata['money'] -= g_equip[ct]['price']
+                                g_userdata['backpack'].append(g_equip[ct])
+                                print(
+                                    f'购买{g_equip[ct]["name"]}成功！花费{g_equip[ct]["price"]}金币。您当前剩余{g_userdata["money"]}金币')
+
+                except BreakPointException:
+                    pass
+            elif t == '3':
+                raise BreakPointException
+            else:
+                continue
+    except BreakPointException:
+        return
+
+
 # 根据当前等级 **随机** 挑选怪物
 def get_monster():
     global g_mon  # 获取全局变量
@@ -43,7 +90,7 @@ def get_monster():
     return t_key, value
 
 
-def print_info():
+def my_print_info():
     global g_filepath
     global g_userdata
     global g_username
@@ -138,6 +185,7 @@ if __name__ == '__main__':
                 g_userdata = {'money': 1000,
                               'exp': 0,  # 这里加上一个总体的经验吧，可以用来设定不同难度的怪物
                               'level': 0,  # 总体的等级
+                              'backpack': [],  # 背包，初始时背包为空
                               'hero': {
                                   '云天河':
                                       {
@@ -215,10 +263,10 @@ if __name__ == '__main__':
             pass
 
         elif t == '4':
-            pass
+            get_in_store()
 
         elif t == '5':
-            print_info()
+            my_print_info()
 
         elif t == '6':
             save_file()
@@ -226,7 +274,7 @@ if __name__ == '__main__':
 
         elif t == '7':
             read_file(g_filepath)
-            print_info()
+            my_print_info()
 
         elif t == '8':
             sys.exit(0)
