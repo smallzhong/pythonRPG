@@ -150,9 +150,7 @@ def check_updgrade():
             g_userdata['hero'][key]['qi'] += g_userdata['hero'][key]['level'] * 30  # 加level * 30点气
             print(f'\t{key}升了{levels_up}级，当前级数为{g_userdata["hero"][key]["level"]}')
 
-    # 读档操作
-
-
+# 读档操作
 def read_file(t_filepath):
     # TODO:封装读档操作
     global g_filepath
