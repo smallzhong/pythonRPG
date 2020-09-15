@@ -55,20 +55,21 @@ def get_in_store():
                         for i in g_equip:
                             print(f'\t{ct}.武器名：{i["name"]}，价格：{i["price"]}金币，伤害加成：{i["hurt"][0]}~{i["hurt"][1]}')
                             ct += 1
-                        t1 = int(input('\t请输入您想要购买的武器的编号:'))
+                        t1 = int(input('请输入您想要购买的武器的编号:'))
                         if t1 < 0 or t1 >= equipct:
                             print('编号输入错误！没有这件武器！')
                             continue
                         else:
-                            if g_userdata['money'] < g_equip[ct]['price']:
-                                print(f'您当前拥有的金币数为{g_userdata["money"]}，不足以购买{g_equip[ct]["name"]}！')
+                            if g_userdata['money'] < g_equip[t1]['price']:
+                                print(f'您当前拥有的金币数为{g_userdata["money"]}，不足以购买{g_equip[t1]["name"]}！')
                                 continue
                             else:
-                                g_userdata['money'] -= g_equip[ct]['price']
-                                g_userdata['backpack'].append(g_equip[ct])
+                                g_userdata['money'] -= g_equip[t1]['price']
+                                g_userdata['backpack'].append(g_equip[t1])
                                 print(
-                                    f'购买{g_equip[ct]["name"]}成功！花费{g_equip[ct]["price"]}金币。您当前剩余{g_userdata["money"]}金币')
-
+                                    f'购买{g_equip[t1]["name"]}成功！'
+                                    f'花费{g_equip[t1]["price"]}金币。您当前剩余{g_userdata["money"]}金币')
+                                raise BreakPointException
                 except BreakPointException:
                     pass
             elif t == '3':
@@ -257,7 +258,15 @@ if __name__ == '__main__':
 
         # 商店
         elif t == '2':
-            pass
+            if not g_userdata['backpack']:
+                print('背包中没有任何物品！去商店看看吧~')
+                continue
+            else:
+                print(f'\t当前背包内共有{len(g_userdata["backpack"])}件物品')
+                ct = 1
+                for i in g_userdata['backpack']:
+                    print(f'\t{ct}.{i["name"]}，出售价格{i["price"] // 2}，伤害区间{i["hurt"][0]}~{i["hurt"][1]}')
+                    ct += 1
 
         elif t == '3':
             pass
