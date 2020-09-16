@@ -22,13 +22,20 @@ g_mon = [
         '赤蜘蛛': {"name": "赤蜘蛛", "qi": 70, "level": 1, "hp": 400, "skill": {'毒焰': [100, 150]}, "cost": {'毒焰': 60}}
     },
     {
-        '花斑虎': {"name": "花斑虎", "qi": 70, "level": 2, "hp": 500, "skill": {'虎啸山林': [200, 250]}, "cost": {'虎啸山林': 50}}
+        '花斑虎': {"name": "花斑虎", "qi": 70, "level": 2, "hp": 500, "skill": {'虎啸山林': [200, 250]}, "cost": {'虎啸山林': 70}}
+    },
+    {
+        '腐尸道人': {'name': '腐尸道人', 'qi': 100, 'level': 3, 'hp': 700, 'skill': {'锁灵环': [400, 500]}, 'cost': {'锁灵环': [80]}}
+    },
+    {
+        '兽面鼎': {'name': '兽面鼎', 'qi': 120, 'level': 4, 'hp': 1000, 'skill': {}, 'cost': {}}
     }
 ]
 g_equip = [
     {'name': '锋灵刃', "price": 500, "hurt": [60, 90]},
     {'name': '玄瞑剑', 'price': 1200, 'hurt': [120, 150]},
-    {'name': '碎痕', 'price': 2100, 'hurt': [200, 240]}
+    {'name': '碎痕', 'price': 2100, 'hurt': [200, 240]},
+    {'name': '慑天', 'price': 3500, 'hurt': [460, 500]},
 ]
 
 
@@ -149,6 +156,7 @@ def check_updgrade():
             g_userdata['hero'][key]['hp'] += g_userdata['hero'][key]['level'] * 100  # 加level * 100点精
             g_userdata['hero'][key]['qi'] += g_userdata['hero'][key]['level'] * 30  # 加level * 30点气
             print(f'\t{key}升了{levels_up}级，当前级数为{g_userdata["hero"][key]["level"]}')
+
 
 # 读档操作
 def read_file(t_filepath):
