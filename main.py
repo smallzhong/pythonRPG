@@ -145,7 +145,7 @@ def check_updgrade():
         levels_up = (g_userdata['exp'] - g_userdata['level'] * levelUpRequire) // levelUpRequire + 1
         # 更新信息
         g_userdata['level'] += levels_up
-        g_userdata['money'] += g_userdata['level'] * 1000  # 升到1级增加1000金币，2级增加2000，以此类推
+        g_userdata['money'] += g_userdata['level'] * 500  # 升到1级增加500金币，2级增加1000，以此类推
         print('\t您升了%d级！当前级数为%d，金钱数为%d' % (levels_up, g_userdata['level'], g_userdata['money']))
 
     for key in g_userdata['hero'].keys():
