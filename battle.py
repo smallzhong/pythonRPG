@@ -1,3 +1,4 @@
+#coding:utf-8
 '战斗类，用来进行战斗和返回战斗的结果'
 from monster import Monster
 import random
