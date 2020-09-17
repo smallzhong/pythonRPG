@@ -106,7 +106,6 @@ class Battle(object):
 
             if t == '1':
                 self.fighterNormalAttackMonster()
-                # TODO：攻速？
                 self.__turn = 'm'
                 return True
 
@@ -127,8 +126,7 @@ class Battle(object):
                 return True
 
             elif t == '4':
-                t = int(random.uniform(0, self.fighter.level + 2000000))  # 级数越高逃跑失败概率越小
-                print(t)
+                t = int(random.uniform(0, self.fighter.level + 2))  # 级数越高逃跑失败概率越小
                 if t:
                     print('逃跑成功!')
                     self.isflee = True  # 设定是逃跑的
@@ -150,7 +148,6 @@ class Battle(object):
             self.monsterNormalAttackFigher()
             self.__turn = 'f'  # 到武将的回合3
             return True
-            # print(f'当前是{self.monster.name}的回合，请选择出招：')
         else:
             raise ValueError('self.__turn设置错误！')
 

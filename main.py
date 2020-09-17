@@ -293,6 +293,7 @@ if __name__ == '__main__':
                 print(f"您成功通过逃跑的方式结束战斗，当前精剩余{g_userdata['hero'][res['name']]['hp']}，"
                       f"气剩余{g_userdata['hero'][res['name']]['qi']}。"
                       f"下次打怪的时候要权衡实力呢，如果觉得打不过可以到商店买八公山豆腐补充精和气哦~")
+            del battle  # 删除战斗类，释放内存空间
         # 商店
         elif t == '2':
             if not g_userdata['backpack']:
