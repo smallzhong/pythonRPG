@@ -4,7 +4,6 @@ import json
 import pickle
 from my_exceptions import BreakPointException
 from monster import Monster
-import gol
 import os
 from fighter import Fighter
 from battle import Battle
@@ -192,12 +191,11 @@ def save_file():
 
 
 if __name__ == '__main__':
-    gol.init()  # 首先初始化全局变量获取模块
     while 1:
         t = input('输入1读取存档，输入2新建存档:')
         if t == '1':
             name = input('请输入您要读取的存档中玩家的姓名')
-            t_filepath = 'f:\\' + name + '.txt'  # TODO:这里可以更改保存的路径
+            t_filepath = name + '.txt'  # TODO:这里可以更改保存的路径
             g_filepath = t_filepath
             g_username = name
             if read_file(t_filepath):
@@ -207,7 +205,7 @@ if __name__ == '__main__':
 
         elif t == '2':
             name = input('请输入您的昵称')
-            t_filepath = 'f:\\\\' + name + '.txt'
+            t_filepath = name + '.txt'
             if os.path.exists(t_filepath):
                 print('此昵称已被注册！')
                 continue

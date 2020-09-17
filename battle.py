@@ -158,7 +158,6 @@ class Battle(object):
                 return True  # 如果输入错误也返回True，重新进行回合
 
         elif self.__turn == 'm':
-            # TODO:这里要随机挑选技能攻击或者普通攻击
             if self.isdone():
                 return False
             c = int(random.uniform(0, 2))  # 如果是0则发动普通攻击，如果是1则发动技能攻击
