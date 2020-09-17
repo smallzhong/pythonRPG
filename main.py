@@ -222,7 +222,7 @@ if __name__ == '__main__':
                                       {
                                           "name": "云天河",
                                           "exp": 0,
-                                          "hp": 100,
+                                          "hp": 130,
                                           "level": 0,
                                           "equip": {"木剑": [30, 50]},
                                           "skill": {"落星式": [100, 200], "膝裂": [200, 300]},
@@ -247,10 +247,11 @@ if __name__ == '__main__':
             print('当前有如下武将:', end='')
             for key in g_userdata['hero'].keys():
                 print(key)
-            a = input('请输入您想要派出的武将:')
-            if a not in g_userdata['hero']:
-                print('武将未找到!')
+            a = input('请输入您想要派出的武将，1.云天河')
+            if a != '1':
                 continue
+            else:
+                a = '云天河'
             # print(g_userdata['hero'][a])
             fighter = Fighter(**g_userdata['hero'][a])  # 传入字典
             # print(mon[1])
@@ -283,7 +284,7 @@ if __name__ == '__main__':
                 g_userdata['hero'][res['name']]['qi'] = \
                     res['fighterqi'] + (g_userdata['level'] + 1) * 10  # 加气(level + 1) * 10
                 g_userdata['hero'][res['name']]['hp'] = \
-                    res['fighterhp'] + (g_userdata['level'] + 1) * 50  # 加精(level + 1) * 50
+                    res['fighterhp'] + (g_userdata['level'] + 1) * 20  # 加精(level + 1) * 20
                 check_updgrade()  # 判断是否升级
 
         # 商店

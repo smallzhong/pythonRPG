@@ -72,7 +72,7 @@ class Battle(object):
     # 怪物普攻武将
     def monsterNormalAttackFigher(self):
         totalHurt = (self.monster.level + 1) * 50 + int(
-            random.uniform(-40, 40)) * (self.monster.level + 1)  # (level + 1) * 50 + rand(-20, 20) * (level + 1)
+            random.uniform(-45, 45)) * (self.monster.level + 1)  # (level + 1) * 50 + rand(-20, 20) * (level + 1)
         self.fighter.minushp(totalHurt)
         time.sleep(1)
         print(f'\t{self.monster.name}对{self.fighter.name}发动普通攻击造成了{totalHurt}点伤害')
