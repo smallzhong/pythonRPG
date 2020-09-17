@@ -46,17 +46,29 @@ class Battle(object):
                 for i in self.fighter.attackdict.items():  # 获取武将的所有招数
                     print(f'{t_ct}.{i[0]}:需要{self.fighter.cost[i[0]]}气')
                     t_ct += 1
-                c = int(input('请输入您想要出的招数的编号'))
-                t_ct = 0
-                # TODO:这里可能会超限，可以试试BreakPointExcept
-                for i in self.fighter.attackdict.items():
-                    if t_ct == c:
-                        c = i[0]
-                        break
-                    else:
-                        t_ct += 1
-                if c not in self.fighter.cost:
-                    print('此技能不存在！请重新输入！')
+                try:
+                    while 1:
+                        c = input('请输入您想要出的招数的编号')
+                        try:
+                            c = int(c)  # 判断这个能不能转换为int，如果能则继续
+                        except ValueError:
+                            print('您的输入不是一个数字！请重新输入！')
+                            continue
+                        t_ct = 0
+                        # TODO:这里可能会超限，可以试试BreakPointExcept
+                        for i in self.fighter.attackdict.items():
+                            if t_ct == c:
+                                c = i[0]
+                                break
+                            else:
+                                t_ct += 1
+                        if c not in self.fighter.cost:
+                            print('此技能不存在！请重新输入！')
+                        else:
+                            raise BreakPointException  # 输入没有问题则跳出
+                except BreakPointException:
+                    pass
+
                 # 如果不够气，继续选择
                 if self.fighter.cost[c] > self.fighter.qi:
                     print(f'气不足，{self.fighter.name}剩余{self.fighter.qi}气，不足以发动{c}技能！')
