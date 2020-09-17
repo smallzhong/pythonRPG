@@ -16,6 +16,15 @@ class Battle(object):
         self._monster = monster
         self._fighter = fighter
         self.__turn = turn  # 用来确定当前是谁的回合，默认武将先行
+        self._isflee = False  # 用来确定这场战斗中武将是否为逃跑
+
+    @property
+    def isflee(self):
+        return self._isflee
+
+    @isflee.setter
+    def isflee(self, v):
+        self._isflee = v
 
     @property
     def monster(self):
@@ -35,7 +44,6 @@ class Battle(object):
                 print(f'当前是{self.fighter.name}的回合，请选择出招：')
                 t_ct = 0  # 用来记录当前招数的编号
                 for i in self.fighter.attackdict.items():  # 获取武将的所有招数
-                    # TODO：这里要让用户可以用数字来选择出招
                     print(f'{t_ct}.{i[0]}:需要{self.fighter.cost[i[0]]}气')
                     t_ct += 1
                 c = int(input('请输入您想要出的招数的编号'))
@@ -108,7 +116,6 @@ class Battle(object):
                 return True
 
             elif t == '3':
-                # TODO:用气加血
                 totalUp = (self.fighter.level + 1) * 50 + int(
                     random.uniform(-10, 100)) * (self.fighter.level + 1)
                 # TODO:加入多个武将之后这里的技能要进行修改
@@ -121,9 +128,16 @@ class Battle(object):
 
             elif t == '4':
                 # TODO:增加随机逃跑方法
-                print('逃跑失败！')
-                self.__turn = 'm'
-                return True
+                t = int(random.uniform(0, self.fighter.level + 2000000))  # 级数越高逃跑失败概率越小
+                print(t)
+                if t:
+                    print('逃跑成功!')
+                    self.isflee = True  # 设定是逃跑的
+                    return False  # 返回战斗结束
+                else:
+                    print('逃跑失败！')
+                    self.__turn = 'm'
+                    return True
 
             else:
                 return True  # 如果输入错误也返回True，重新进行回合
@@ -152,22 +166,34 @@ class Battle(object):
 
     # 返回战斗结果
     def res(self):
-        # TODO:这里要返回战斗的结果
-        if self.monster.hp <= 0:
-            winner = 'fighter'
-            name = self.fighter.name
-        elif self.fighter.hp <= 0:
-            winner = 'monster'
-            name = self.monster.name
+        # 如果不是逃跑，正常返回
+        if not self.isflee:
+            if self.monster.hp <= 0:
+                winner = 'fighter'
+                name = self.fighter.name
+            elif self.fighter.hp <= 0:
+                winner = 'monster'
+                name = self.monster.name
+            else:
+                raise ValueError('战斗未结束即返回，出现错误！')
+
+            fighterhp = self.fighter.hp
+            fighterqi = self.fighter.qi
+            return {
+                "isflee": False,  # 判断是否为逃跑的字段，打赢后离开为False
+                "winner": winner,  # 胜利者是武将还是怪物
+                "name": name,
+                "fighterhp": fighterhp,  # 结束后武将剩余的精
+                "fighterqi": fighterqi  # 结束后武将剩余的气
+            }
+
         else:
-            raise ValueError('战斗未结束即返回，出现错误！')
-
-        fighterhp = self.fighter.hp
-        fighterqi = self.fighter.qi
-
-        return {
-            "winner": winner,  # 胜利者是武将还是怪物
-            "name": name,
-            "fighterhp": fighterhp,  # 结束后武将剩余的精
-            "fighterqi": fighterqi  # 结束后武将剩余的气
-        }
+            fighterhp = self.fighter.hp
+            fighterqi = self.fighter.qi
+            name = self.fighter.name  # 如果成功逃跑，则一定没有被打死，不用判断HP是否为0
+            return {
+                "isflee": True,  # 如果是逃跑的，将isflee字段设置为True
+                "name": name,
+                "fighterhp": fighterhp,  # 结束后武将剩余的精
+                "fighterqi": fighterqi  # 结束后武将剩余的气
+            }

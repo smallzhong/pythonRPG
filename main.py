@@ -270,23 +270,31 @@ if __name__ == '__main__':
 
             # 战斗结束后获取战斗结果，进行加气、判断升级等操作
             res = battle.res()
-            print(f'战斗结束！{res["name"]}胜利！')
-            if res['winner'] == 'monster':
-                print('您被打败了！即将重新读档！')
-                if read_file(g_filepath):  # 重新读档
-                    print('重新读档成功。')
+            # 如果不是通过逃跑结束的战斗，则正常结算
+            if not res['isflee']:
+                print(f'战斗结束！{res["name"]}胜利！')
+                if res['winner'] == 'monster':
+                    print('您被打败了！即将重新读档！')
+                    if read_file(g_filepath):  # 重新读档
+                        print('重新读档成功。')
+                    else:
+                        raise ValueError('重新读档失败！！可能是由于存档文件被破坏')
                 else:
-                    raise ValueError('重新读档失败！！可能是由于存档文件被破坏')
+                    # 战斗胜利，加精加气加经验
+                    g_userdata['exp'] += (g_userdata['level'] + 1) * 50  # 加经验(level + 1) * 50
+                    g_userdata['hero'][res['name']]['exp'] += (g_userdata['level'] + 1) * 50  # 武将加经验(level + 1) * 50
+                    g_userdata['hero'][res['name']]['qi'] = \
+                        res['fighterqi'] + (g_userdata['level'] + 1) * 10  # 加气(level + 1) * 10
+                    g_userdata['hero'][res['name']]['hp'] = \
+                        res['fighterhp'] + (g_userdata['level'] + 1) * 20  # 加精(level + 1) * 20
+                    check_updgrade()  # 判断是否升级
+            # 如果是通过逃跑结束的战斗，则不给予胜利奖励
             else:
-                # 战斗胜利，加精加气加经验
-                g_userdata['exp'] += (g_userdata['level'] + 1) * 50  # 加经验(level + 1) * 50
-                g_userdata['hero'][res['name']]['exp'] += (g_userdata['level'] + 1) * 50  # 武将加经验(level + 1) * 50
-                g_userdata['hero'][res['name']]['qi'] = \
-                    res['fighterqi'] + (g_userdata['level'] + 1) * 10  # 加气(level + 1) * 10
-                g_userdata['hero'][res['name']]['hp'] = \
-                    res['fighterhp'] + (g_userdata['level'] + 1) * 20  # 加精(level + 1) * 20
-                check_updgrade()  # 判断是否升级
-
+                g_userdata['hero'][res['name']]['qi'] = res['fighterqi']  # 设定武将的气，没有胜利的奖励
+                g_userdata['hero'][res['name']]['hp'] = res['fighterhp']  # 设定武将的精，没有胜利的奖励
+                print(f"您成功通过逃跑的方式结束战斗，当前精剩余{g_userdata['hero'][res['name']]['hp']}，"
+                      f"气剩余{g_userdata['hero'][res['name']]['qi']}。"
+                      f"下次打怪的时候要权衡实力呢，如果觉得打不过可以到商店买八公山豆腐补充精和气哦~")
         # 商店
         elif t == '2':
             if not g_userdata['backpack']:
