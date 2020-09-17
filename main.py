@@ -321,9 +321,21 @@ if __name__ == '__main__':
                         for i in g_userdata['backpack']:
                             print(f'\t{ct}.{i["name"]}，出售价格{i["price"] // 2}，伤害区间{i["hurt"][0]}~{i["hurt"][1]}')
                             ct += 1
-                        t2 = int(input('请输入您要装备的装备编号:'))
+                        try:
+                            while 1:
+                                t2 = input('请输入您要装备的装备编号:')
+                                #  防止输入的不是一个数字
+                                try:
+                                    t2 = int(t2)
+                                    raise BreakPointException
+                                except ValueError:
+                                    print('您输入的不是一个数字！请重新输入')
+                                    continue
+                        except BreakPointException:
+                            pass
+                        # 防止输入数字错误
                         if t2 < 0 or t2 >= len(g_userdata['backpack']):
-                            print('输入错误！')
+                            print('输入错误！没有这件武器！')
                             continue
                         else:
                             g_userdata['hero']['云天河']['equip'] = {
