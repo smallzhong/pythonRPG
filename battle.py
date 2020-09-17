@@ -127,7 +127,6 @@ class Battle(object):
                 return True
 
             elif t == '4':
-                # TODO:增加随机逃跑方法
                 t = int(random.uniform(0, self.fighter.level + 2000000))  # 级数越高逃跑失败概率越小
                 print(t)
                 if t:

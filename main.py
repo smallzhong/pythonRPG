@@ -160,7 +160,6 @@ def check_updgrade():
 
 # 读档操作
 def read_file(t_filepath):
-    # TODO:封装读档操作
     global g_filepath
     global g_userdata
     global g_username
@@ -212,7 +211,6 @@ if __name__ == '__main__':
                 print('此昵称已被注册！')
                 continue
             else:
-                # TODO：不能用字典存数据，那就换成类，查一下json.dump如何保存类数据
                 g_userdata = {'money': 1000,
                               'exp': 0,  # 这里加上一个总体的经验吧，可以用来设定不同难度的怪物
                               'level': 0,  # 总体的等级
