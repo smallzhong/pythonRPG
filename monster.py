@@ -19,6 +19,11 @@ class Monster(object):
         self._qi = kwargs['qi']
         self._name = kwargs['name']
         self._level = kwargs['level']
+        self._cost = kwargs['cost']
+
+    @property
+    def cost(self):
+        return self._cost
 
     @property
     def level(self):
@@ -48,9 +53,17 @@ class Monster(object):
     def addhp(self, h):
         self._hp += h
 
+    # 减气
+    def minusqi(self, h):
+        self._qi -= h
+
+    # 加气
+    def addqi(self, h):
+        self._qi += h
+
     # 物理攻击
-    def normalattack(self):
+    def skillattack(self):
         # 随机选择一种物理攻击
         key = random.choice(list(self._attackdict.keys()))
         attackpoint = random.uniform(self._attackdict[key][0], self._attackdict[key][1] + 1)
-        return key, attackpoint  # 返回攻击名称和攻击点数
+        return key, int(attackpoint)  # 返回攻击名称和攻击点数(int)

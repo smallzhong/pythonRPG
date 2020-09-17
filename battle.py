@@ -76,7 +76,12 @@ class Battle(object):
         # self.monster.minushp(self.fighter.attackdict[c])
 
     def monsterSkillAttackFighter(self):
-        pass
+        name, totalhurt = self.monster.skillattack()
+        time.sleep(1)
+        print(f'\t{self.monster.name}对{self.fighter.name}发动{name}技能造成了{totalhurt}点伤害')
+        self.fighter.minushp(totalhurt)  # 武将减精
+        for i in self.monster.cost.values():
+            self.monster.minusqi(i)  # 怪物减气
 
     # 武将普攻怪物
     def fighterNormalAttackMonster(self):
@@ -105,6 +110,7 @@ class Battle(object):
             t = input('武将回合，请输入选择，1普通攻击，2技能攻击（消耗气），3技能补血（消耗气），4逃跑（一定概率失败），输入其他进行查看双方状态')
 
             if t == '1':
+                print(f'{self.fighter.name}进行普通攻击')
                 self.fighterNormalAttackMonster()
                 self.__turn = 'm'
                 return True
@@ -143,11 +149,23 @@ class Battle(object):
             # TODO:这里要随机挑选技能攻击或者普通攻击
             if self.isdone():
                 return False
-            time.sleep(1)
-            print(f'怪物回合，{self.monster.name}进行普通攻击')
-            self.monsterNormalAttackFigher()
-            self.__turn = 'f'  # 到武将的回合3
-            return True
+            c = int(random.uniform(0, 2))  # 如果是0则发动普通攻击，如果是1则发动技能攻击
+            # 判断怪物有没有足够的气，如果没有则将c设置为0，即只能发出普通攻击
+            for i in self.monster.cost.values():
+                if self.monster.qi < i:  # 没有足够的气，则将c设置为0，只能发出普通攻击
+                    c = 0
+            if c:
+                time.sleep(1)
+                print(f'怪物回合，{self.monster.name}进行技能攻击')
+                self.monsterSkillAttackFighter()
+                self.__turn = 'f'  # 到武将的回合
+                return True
+            else:
+                time.sleep(1)
+                print(f'怪物回合，{self.monster.name}进行普通攻击')
+                self.monsterNormalAttackFigher()
+                self.__turn = 'f'  # 到武将的回合
+                return True
         else:
             raise ValueError('self.__turn设置错误！')
 
