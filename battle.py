@@ -33,10 +33,20 @@ class Battle(object):
                 # 如果正确就raise一个BreakPointException退出循环
                 # 用来实现类似GOTO的功能
                 print(f'当前是{self.fighter.name}的回合，请选择出招：')
+                t_ct = 0  # 用来记录当前招数的编号
                 for i in self.fighter.attackdict.items():  # 获取武将的所有招数
                     # TODO：这里要让用户可以用数字来选择出招
-                    print(f'{i[0]}:需要{self.fighter.cost[i[0]]}气')
-                c = input('请输入您想要出的招数')
+                    print(f'{t_ct}.{i[0]}:需要{self.fighter.cost[i[0]]}气')
+                    t_ct += 1
+                c = int(input('请输入您想要出的招数的编号'))
+                t_ct = 0
+                # TODO:这里可能会超限，可以试试BreakPointExcept
+                for i in self.fighter.attackdict.items():
+                    if t_ct == c:
+                        c = i[0]
+                        break
+                    else:
+                        t_ct += 1
                 if c not in self.fighter.cost:
                     print('此技能不存在！请重新输入！')
                 # 如果不够气，继续选择
@@ -98,7 +108,14 @@ class Battle(object):
                 return True
 
             elif t == '3':
-                # TODO:
+                # TODO:用气加血
+                totalUp = (self.fighter.level + 1) * 50 + int(
+                    random.uniform(-10, 100)) * (self.fighter.level + 1)
+                # TODO:加入多个武将之后这里的技能要进行修改
+                self.fighter.addhp(totalUp)
+                qicost = (self.fighter.level + 1) * 25
+                self.fighter.minusqi(qicost)  # 减气
+                print(f'{self.fighter.name}发动了五气连波技能，消耗{qicost}气，增加了{totalUp}精，当前精为{self.fighter.hp}')
                 self.__turn = 'm'
                 return True
 
