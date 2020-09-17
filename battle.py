@@ -9,8 +9,6 @@ from my_exceptions import BreakPointException
 import time
 
 
-# TODO:怪物出招也是随机选择普通攻击或者技能攻击，如果气没了则只进行技能攻击
-
 class Battle(object):
     def __init__(self, monster, fighter, turn='f'):
         self._monster = monster
@@ -55,7 +53,6 @@ class Battle(object):
                             print('您的输入不是一个数字！请重新输入！')
                             continue
                         t_ct = 0
-                        # TODO:这里可能会超限，可以试试BreakPointExcept
                         for i in self.fighter.attackdict.items():
                             if t_ct == c:
                                 c = i[0]
