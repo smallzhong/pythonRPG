@@ -190,11 +190,11 @@ def my_print_info():
     global g_userdata
     global g_username
     global g_mon
-    print(f'\t当前整体等级：{g_userdata["level"]}，经验值：{g_userdata["exp"]}，金钱数{g_userdata["money"]}')
     for key in g_userdata['hero']:
         print(f'\t{g_userdata["hero"][key]["name"]}当前状态：精：{g_userdata["hero"][key]["hp"]}，'
               f'气：{g_userdata["hero"][key]["qi"]}，等级：{g_userdata["hero"][key]["level"]}，'
-              f'经验值：{g_userdata["hero"][key]["exp"]}')
+              f'经验值：{g_userdata["hero"][key]["exp"]}。', end='')
+    print(f'当前拥有{g_userdata["money"]}金币')
 
 
 # 检查是否升级
