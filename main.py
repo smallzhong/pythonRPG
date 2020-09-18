@@ -50,7 +50,7 @@ def get_in_store():
     print(f'{g_username}，欢迎来到商店！您当前共有{g_userdata["money"]}金币。', end='')
     try:
         while 1:
-            t = input('输入1查看并购买商品，2购买八公山豆腐(回精回气)，3卖出物品，4离开商店')
+            t = input('1.查看并购买商品，2.购买八公山豆腐(回精回气)，3.卖出物品，4.离开商店')
             if t == '1':
                 try:
                     while 1:
@@ -255,7 +255,8 @@ def save_file():
 
 if __name__ == '__main__':
     while 1:
-        t = input('输入1读取存档，2新建存档:')
+        print('欢迎来到仙剑的世界。')
+        t = input('请输入1.读取存档，2.新建存档')
         if t == '1':
             name = input('请输入您要读取的存档中玩家的姓名')
             t_filepath = name + '.txt'  # TODO:这里可以更改保存的路径
@@ -300,7 +301,7 @@ if __name__ == '__main__':
     # 读取或新建存档成功，进入游戏
     while 1:
         # TODO:要可以读取任意时间的存档
-        t = input('输入1开始打怪，2查看背包，3查看或修改武将装备，4进入商店，5查看武将状态，6存档，7读档，8退出游戏')
+        t = input('1.开始打怪，2查看背包，3查看或修改武将装备，4进入商店，5查看武将状态，6存档，7读档，8退出游戏')
         if t == '1':
             mon = get_monster()
             # print(mon)
@@ -325,8 +326,8 @@ if __name__ == '__main__':
             while battle.move():  # 如果返回False表明战斗结束
                 time.sleep(1)
                 print(
-                    f'\t战斗进行中，{a}剩余{battle.fighter.hp if battle.fighter.hp else 0}精，剩余{battle.fighter.qi}气，'
-                    f'{mon[0]}剩余{battle.monster.hp if battle.monster.hp else 0}精，剩余{battle.monster.qi}气')
+                    f'\t战斗进行中，{a}剩余{battle.fighter.hp if battle.fighter.hp > 0 else 0}精，剩余{battle.fighter.qi}气，'
+                    f'{mon[0]}剩余{battle.monster.hp if battle.monster.hp > 0 else 0}精，剩余{battle.monster.qi}气')
 
             # 战斗结束后获取战斗结果，进行加气、判断升级等操作
             res = battle.res()
@@ -371,7 +372,7 @@ if __name__ == '__main__':
         elif t == '3':
             try:
                 while 1:
-                    t1 = input('输入1查看所有武将的装备，2更换云天河的装备，3退出..(其他武将待添加)')
+                    t1 = input('1.查看所有武将的装备，2.更换云天河的装备，3.退出..(其他武将待添加)')
                     if t1 == '1':
                         for i in g_userdata['hero'].values():
                             print(
@@ -386,14 +387,13 @@ if __name__ == '__main__':
                             ct += 1
                         try:
                             while 1:
-                                t2 = input('请输入您要装备的装备编号:')
+                                t2 = input('请输入您要装备的装备编号，输入任意非数字字符退出:')
                                 #  防止输入的不是一个数字
                                 try:
                                     t2 = int(t2)
                                     raise BreakPointException
                                 except ValueError:
-                                    print('您输入的不是一个数字！请重新输入')
-                                    continue
+                                    raise BreakPointException
                         except BreakPointException:
                             pass
                         # 防止输入数字错误
