@@ -1,5 +1,5 @@
 #!/usr/bin/python
-#coding:utf-8
+# coding:utf-8
 '战斗类，用来进行战斗和返回战斗的结果'
 from monster import Monster
 import random
@@ -127,9 +127,17 @@ class Battle(object):
                 return True
 
             elif t == '2':
-                self.fighterSkillAttackMonster()
-                self.__turn = 'm'
-                return True
+                t_min = min(self.fighter.cost.values())
+                # 如果当前没有足够的气来发动技能攻击
+                if self.fighter.qi < t_min:
+                    print(f'{self.fighter.name}当前只有{self.fighter.qi}气，没有足够的气来发动技能攻击，将默认进行普通攻击。')
+                    self.fighterNormalAttackMonster()
+                    self.__turn = 'm'
+                    return True
+                else:
+                    self.fighterSkillAttackMonster()
+                    self.__turn = 'm'
+                    return True
 
             elif t == '3':
                 totalUp = (self.fighter.level + 1) * 50 + int(

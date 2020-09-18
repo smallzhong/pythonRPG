@@ -50,7 +50,7 @@ def get_in_store():
     print(f'{g_username}，欢迎来到商店！您当前共有{g_userdata["money"]}金币。', end='')
     try:
         while 1:
-            t = input('输入1查看并购买商品，输入2购买八公山豆腐(回精回气)，输入3卖出物品，输入4离开商店')
+            t = input('输入1查看并购买商品，2购买八公山豆腐(回精回气)，3卖出物品，4离开商店')
             if t == '1':
                 try:
                     while 1:
@@ -209,7 +209,7 @@ def check_updgrade():
         # 更新信息
         g_userdata['level'] += levels_up
         g_userdata['money'] += g_userdata['level'] * 500  # 升到1级增加500金币，2级增加1000，以此类推
-        print('\t您升了%d级！当前级数为%d，金钱数为%d' % (levels_up, g_userdata['level'], g_userdata['money']))
+        # print('\t您升了%d级！当前级数为%d，金钱数为%d' % (levels_up, g_userdata['level'], g_userdata['money']))
 
     for key in g_userdata['hero'].keys():
         if g_userdata['hero'][key]['level'] * levelUpRequire < g_userdata['hero'][key]['exp']:
@@ -255,7 +255,7 @@ def save_file():
 
 if __name__ == '__main__':
     while 1:
-        t = input('输入1读取存档，输入2新建存档:')
+        t = input('输入1读取存档，2新建存档:')
         if t == '1':
             name = input('请输入您要读取的存档中玩家的姓名')
             t_filepath = name + '.txt'  # TODO:这里可以更改保存的路径
@@ -325,8 +325,8 @@ if __name__ == '__main__':
             while battle.move():  # 如果返回False表明战斗结束
                 time.sleep(1)
                 print(
-                    f'\t战斗进行中，{a}剩余{battle.fighter.hp}精，剩余{battle.fighter.qi}气，'
-                    f'{mon[0]}剩余{battle.monster.hp}精，剩余{battle.monster.qi}气')
+                    f'\t战斗进行中，{a}剩余{battle.fighter.hp if battle.fighter.hp else 0}精，剩余{battle.fighter.qi}气，'
+                    f'{mon[0]}剩余{battle.monster.hp if battle.monster.hp else 0}精，剩余{battle.monster.qi}气')
 
             # 战斗结束后获取战斗结果，进行加气、判断升级等操作
             res = battle.res()
@@ -371,7 +371,7 @@ if __name__ == '__main__':
         elif t == '3':
             try:
                 while 1:
-                    t1 = input('输入1查看所有武将的装备，输入2更换云天河的装备，输入3退出..(其他武将待添加)')
+                    t1 = input('输入1查看所有武将的装备，2更换云天河的装备，3退出..(其他武将待添加)')
                     if t1 == '1':
                         for i in g_userdata['hero'].values():
                             print(
