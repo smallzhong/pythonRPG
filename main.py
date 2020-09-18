@@ -240,8 +240,8 @@ def save_file():
 
 
 if __name__ == '__main__':
+    print('欢迎来到仙剑的世界。')
     while 1:
-        print('欢迎来到仙剑的世界。')
         t = input('请输入1.读取存档，2.新建存档')
         if t == '1':
             name = input('请输入您要读取的存档中玩家的姓名')

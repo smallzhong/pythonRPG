@@ -139,15 +139,20 @@ class Battle(object):
                     return True
 
             elif t == '3':
-                totalUp = (self.fighter.level + 1) * 50 + int(
-                    random.uniform(-10, 100)) * (self.fighter.level + 1)
-                # TODO:加入多个武将之后这里的技能要进行修改
-                self.fighter.addhp(totalUp)
                 qicost = (self.fighter.level + 1) * 25
-                self.fighter.minusqi(qicost)  # 减气
-                print(f'{self.fighter.name}发动了五气连波技能，消耗{qicost}气，增加了{totalUp}精，当前精为{self.fighter.hp}')
-                self.__turn = 'm'
-                return True
+                if self.fighter.qi < qicost:
+                    print(f'{self.fighter.name}剩余的气为{self.fighter.qi}，'
+                          f'当前等级使用五气连波技能需要{qicost}点气，技能发动失败！')
+                    return True
+                else:
+                    totalUp = (self.fighter.level + 1) * 50 + int(
+                        random.uniform(-10, 100)) * (self.fighter.level + 1)
+                    # TODO:加入多个武将之后这里的技能要进行修改
+                    self.fighter.addhp(totalUp)
+                    self.fighter.minusqi(qicost)  # 减气
+                    print(f'{self.fighter.name}发动了五气连波技能，消耗{qicost}气，增加了{totalUp}精，当前精为{self.fighter.hp}')
+                    self.__turn = 'm'
+                    return True
 
             elif t == '4':
                 t = int(random.uniform(0, self.fighter.level + 2))  # 级数越高逃跑失败概率越小
