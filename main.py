@@ -1,5 +1,5 @@
 #!/usr/bin/python
-#coding:utf-8
+# coding:utf-8
 import random
 import time
 import json
@@ -50,12 +50,8 @@ def get_in_store():
     print(f'{g_username}，欢迎来到商店！您当前共有{g_userdata["money"]}金币。', end='')
     try:
         while 1:
-            t = input('输入1查看商店商品，输入2购买商品，输入3购买八公山豆腐(回精回气)，输入4卖出物品，输入5离开商店')
+            t = input('输入1查看并购买商品，输入2购买八公山豆腐(回精回气)，输入3卖出物品，输入4离开商店')
             if t == '1':
-                print(f'\t当前商店共有{len(g_equip)}件商品')
-                for i in g_equip:
-                    print(f'\t武器名：{i["name"]}，价格：{i["price"]}金币，伤害加成：{i["hurt"][0]}~{i["hurt"][1]}')
-            elif t == '2':
                 try:
                     while 1:
                         equipct = len(g_equip)
@@ -64,7 +60,15 @@ def get_in_store():
                         for i in g_equip:
                             print(f'\t{ct}.武器名：{i["name"]}，价格：{i["price"]}金币，伤害加成：{i["hurt"][0]}~{i["hurt"][1]}')
                             ct += 1
-                        t1 = int(input('请输入您想要购买的武器的编号:'))
+                        # 判断用户是否有足够的金钱来购买武器
+                        if g_userdata['money'] < g_equip[0]['price']:
+                            print(f'您当前只有{g_userdata["money"]}金币，无法购买任何武器，去打怪赚些金币再来吧~')
+                            raise BreakPointException
+                        t1 = input('如需购买武器请输入武器的编号，需退出请输入任意非数字字符:')
+                        try:
+                            t1 = int(t1)
+                        except ValueError:
+                            break
                         if t1 < 0 or t1 >= equipct:
                             print('编号输入错误！没有这件武器！')
                             continue
@@ -81,7 +85,7 @@ def get_in_store():
                                 raise BreakPointException
                 except BreakPointException:
                     pass
-            elif t == '3':
+            elif t == '2':
                 try:
                     while 1:
                         t2 = input(f'购买八公山豆腐将消耗200金币，恢复200精和100气，'
@@ -105,7 +109,7 @@ def get_in_store():
                             continue
                 except BreakPointException:
                     pass
-            elif t == '4':
+            elif t == '3':
                 # for i in g_userdata['backpack']:
                 try:
                     while 1:
@@ -157,7 +161,7 @@ def get_in_store():
                             continue
                 except BreakPointException:
                     pass
-            elif t == '5':
+            elif t == '4':
                 raise BreakPointException
             else:
                 continue
