@@ -113,21 +113,26 @@ def get_in_store():
                 # for i in g_userdata['backpack']:
                 try:
                     while 1:
-                        t2 = input('请输入您想要进行的操作，1.查看所有能卖出的物品及其价格，2.卖出商品。3.返回商店主菜单')
+                        t2 = input('请输入您想要进行的操作，1.查看并卖出商品。2.返回商店主菜单')
+                        # if t2 == '1':
+                        #     # 如果背包里面没有东西
+                        #     if not g_userdata['backpack']:
+                        #         print('背包里面什么能卖的东西都没有哦~')
+                        #         raise BreakPointException  # 退出卖东西菜单
+                        #     else:
+                        #         t_ct = 0
+                        #         for i in g_userdata['backpack']:
+                        #             print(f'\t{t_ct}.{i["name"]}，伤害{i["hurt"][0]}~{i["hurt"][1]}，'
+                        #                   f'回收价格：{i["price"] // 2}')
+                        #             t_ct += 1
+                        # 如果用户想卖出物品
                         if t2 == '1':
+                            t_ct = 0
                             # 如果背包里面没有东西
                             if not g_userdata['backpack']:
-                                print('背包里面什么能卖的东西都没有哦~')
+                                print('背包里面什么能卖的东西都没有哦，下次再来吧~')
                                 raise BreakPointException  # 退出卖东西菜单
-                            else:
-                                t_ct = 0
-                                for i in g_userdata['backpack']:
-                                    print(f'\t{t_ct}.{i["name"]}，伤害{i["hurt"][0]}~{i["hurt"][1]}，'
-                                          f'回收价格：{i["price"] // 2}')
-                                    t_ct += 1
-                        # 如果用户想卖出物品
-                        elif t2 == '2':
-                            t_ct = 0
+
                             for i in g_userdata['backpack']:
                                 print(f'\t{t_ct}.{i["name"]}，伤害{i["hurt"][0]}~{i["hurt"][1]}，'
                                       f'回收价格：{i["price"] // 2}')
@@ -136,15 +141,15 @@ def get_in_store():
                                 while 1:
                                     try:
                                         while 1:
-                                            t3 = input('请输入您想要卖出的物品的编号')
+                                            t3 = input('请输入您想要卖出的物品的编号，如需退出请输入任意非数字字符')
                                             t3 = int(t3)
                                             break
                                     except ValueError:
-                                        print('请输入一个数字！')
+                                        break
                                         continue
                                     if t3 < 0 or t3 >= len(g_userdata['backpack']):
                                         print('您的背包中没有这个编号的物品！')
-                                        raise BreakPointException
+                                        continue
                                     else:
                                         g_userdata['money'] += g_userdata['backpack'][t3]['price'] // 2  # 加金钱
                                         print(f"您已成功卖出{g_userdata['backpack'][t3]['name']}，"
@@ -155,7 +160,7 @@ def get_in_store():
                                         raise BreakPointException
                             except BreakPointException:
                                 pass
-                        elif t2 == '3':
+                        elif t2 == '2':
                             raise BreakPointException
                         else:
                             continue
