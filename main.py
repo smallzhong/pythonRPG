@@ -109,22 +109,9 @@ def get_in_store():
                 except BreakPointException:
                     pass
             elif t == '3':
-                # for i in g_userdata['backpack']:
                 try:
                     while 1:
                         t2 = input('请输入您想要进行的操作，1.查看并卖出商品。2.返回商店主菜单')
-                        # if t2 == '1':
-                        #     # 如果背包里面没有东西
-                        #     if not g_userdata['backpack']:
-                        #         print('背包里面什么能卖的东西都没有哦~')
-                        #         raise BreakPointException  # 退出卖东西菜单
-                        #     else:
-                        #         t_ct = 0
-                        #         for i in g_userdata['backpack']:
-                        #             print(f'\t{t_ct}.{i["name"]}，伤害{i["hurt"][0]}~{i["hurt"][1]}，'
-                        #                   f'回收价格：{i["price"] // 2}')
-                        #             t_ct += 1
-                        # 如果用户想卖出物品
                         if t2 == '1':
                             t_ct = 0
                             # 如果背包里面没有东西
