@@ -272,8 +272,8 @@ if __name__ == '__main__':
                                           "hp": 130,
                                           "level": 0,
                                           "equip": {"木剑": [30, 50]},
-                                          "skill": {"落星式": [100, 200], "膝裂": [200, 300]},
-                                          "cost": {"落星式": 25, "膝裂": 40},
+                                          "skill": {"落星式": [80, 100], "膝裂（降低怪物25攻击速度）": [70, 110]},
+                                          "cost": {"落星式": 25, "膝裂（降低怪物25攻击速度）": 40},
                                           "qi": 100
                                       }
                               }
@@ -341,10 +341,10 @@ if __name__ == '__main__':
                 g_userdata['hero'][res['name']]['hp'] = res['fighterhp']  # 设定武将的精，没有胜利的奖励
                 if res['moneyflee']:
                     g_userdata['money'] -= 200
-                    print(f'成功发动孤注一掷技能，消耗200金币，当前剩余{g_userdata["money"]}金币。')
+                    print(f'成功发动烟雨夺魂技能，消耗200金币，当前剩余{g_userdata["money"]}金币。')
                     time.sleep(1)
                 print(
-                    f"您成功通过{'发动孤注一掷技能的方式' if res['moneyflee'] else '逃跑的方式'}结束战斗，"
+                    f"您成功通过{'发动烟雨夺魂技能的方式' if res['moneyflee'] else '逃跑的方式'}结束战斗，"
                     f"当前精剩余{g_userdata['hero'][res['name']]['hp']}，"
                     f"气剩余{g_userdata['hero'][res['name']]['qi']}。"
                     f"下次打怪的时候要权衡实力呢，如果觉得打不过可以到商店买八公山豆腐补充精和气哦~")

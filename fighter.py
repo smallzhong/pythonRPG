@@ -1,4 +1,4 @@
-#coding:utf-8
+# coding:utf-8
 import json
 import pickle
 import logging
@@ -23,6 +23,11 @@ class Fighter(object):
         self._cost = kwargs['cost']
         self._level = kwargs['level']
         self._exp = kwargs['exp']
+        self._speed = 50  # 默认武将的攻击速度也为50
+
+    @property
+    def speed(self):
+        return self._speed
 
     @property
     def exp(self):

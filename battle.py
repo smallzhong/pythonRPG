@@ -16,6 +16,9 @@ class Battle(object):
         self._fighter = fighter
         self.__turn = turn  # 用来确定当前是谁的回合，默认武将先行
         self._isflee = False  # 用来确定这场战斗中武将是否为逃跑
+        self.__monsterrun = 0  # 怪物的时间槽读条进度
+        self.__fighterrun = self.fighter.speed  # 武将的时间槽读条进度，开始的时候要让武将先攻击，所以初始化为self.fighter.speed
+        self.notturnflag = False  # 如果有特殊情况不需要更换攻击方，则将这个属性置为真
 
     @property
     def isflee(self):
@@ -47,12 +50,12 @@ class Battle(object):
                     t_ct += 1
                 try:
                     while 1:
-                        c = input('请输入您想要出的招数的编号')
+                        c = input('请输入您想要出的招数的编号，如果想重新回到动作选择界面请输入任意非数字内容')
                         try:
                             c = int(c)  # 判断这个能不能转换为int，如果能则继续
                         except ValueError:
-                            print('您的输入不是一个数字！请重新输入！')
-                            continue
+                            return False  # 如果想重新回到动作选择界面，return False
+
                         t_ct = 0
                         for i in self.fighter.attackdict.items():
                             if t_ct == c:
@@ -82,8 +85,14 @@ class Battle(object):
         basehurt = int(random.uniform(self.fighter.attackdict[c][0], self.fighter.attackdict[c][1]))
         totalhurt = equipaddition + basehurt
         self.monster.minushp(totalhurt)
-        print(f'云天河发动{c}技能对{self.monster.name}造成{totalhurt}点伤害')
-        # self.monster.minushp(self.fighter.attackdict[c])
+
+        # 如果是膝裂技能则降低怪物攻击速度25
+        if c == "膝裂（降低怪物25攻击速度）":
+            self.monster.speed = self.monster.speed // 2
+
+        print(f'云天河发动{c if c != "膝裂（降低怪物25攻击速度）" else "膝裂"}技能对{self.monster.name}'
+              f'造成{totalhurt}点伤害{"，并附加降低其25攻击速度" if c == "膝裂（降低怪物25攻击速度）" else ""}')
+        return True
 
     def monsterSkillAttackFighter(self):
         name, totalhurt = self.monster.skillattack()
@@ -110,21 +119,39 @@ class Battle(object):
         time.sleep(1)
         print(f'\t{self.monster.name}对{self.fighter.name}发动普通攻击造成了{totalHurt}点伤害')
 
+    # 用来更新时间槽，判断当前应该轮到怪物出招还是武将出招
+    def setturn(self):
+        # 如果没有出现特殊情况
+        if not self.notturnflag:
+            if self.__turn == 'f':
+                self.__monsterrun += self.monster.speed
+            elif self.__turn == 'm':
+                self.__fighterrun += self.fighter.speed
+            else:
+                raise ValueError(f'self.__turn={self.__turn}，值不合法！')
+            if self.__fighterrun >= self.__monsterrun:  # 如果当前武将走在时间槽的前面，则武将攻击
+                self.__turn = 'f'
+            else:
+                self.__turn = 'm'  # 如果当前怪物的时间槽走在前面，则怪物攻击
+        else:
+            self.notturnflag = False  # 重置此flag，不做任何其他动作
+
     # 用来选择出招
     def move(self):
+        self.setturn()  # 读取时间槽，设定当前应由谁出招
         # 武将回合
         if self.__turn == 'f':
             if self.isdone():
                 return False
             time.sleep(1)
             t = input('武将回合，请输入选择，1普通攻击，2技能攻击（消耗气），3技能补血（消耗气），4逃跑（一定概率失败），'
-                      '5孤注一掷（消耗200金币，逃跑一定成功），'
+                      '5烟雨夺魂（消耗200金币，逃跑一定成功），'
                       '输入其他进行查看双方状态')
 
             if t == '1':
                 print(f'{self.fighter.name}进行普通攻击')
                 self.fighterNormalAttackMonster()
-                self.__turn = 'm'
+                # self.__turn = 'm'
                 return True
 
             elif t == '2':
@@ -133,18 +160,20 @@ class Battle(object):
                 if self.fighter.qi < t_min:
                     print(f'{self.fighter.name}当前只有{self.fighter.qi}气，没有足够的气来发动技能攻击，将默认进行普通攻击。')
                     self.fighterNormalAttackMonster()
-                    self.__turn = 'm'
                     return True
                 else:
-                    self.fighterSkillAttackMonster()
-                    self.__turn = 'm'
-                    return True
+                    if self.fighterSkillAttackMonster():
+                        return True
+                    else:
+                        self.notturnflag = True  # 非预期，重新返回到动作选择界面
+                        return True
 
             elif t == '3':
                 qicost = (self.fighter.level + 1) * 25
                 if self.fighter.qi < qicost:
                     print(f'{self.fighter.name}剩余的气为{self.fighter.qi}，'
-                          f'当前等级使用五气连波技能需要{qicost}点气，技能发动失败！')
+                          f'当前等级使用五气连波技能需要{qicost}点气，技能发动失败！请重新选择动作！')
+                    self.notturnflag = True  # 由于发动技能失败而返回，不能让其更改时间槽
                     return True
                 else:
                     totalUp = (self.fighter.level + 1) * 50 + int(
@@ -153,7 +182,7 @@ class Battle(object):
                     self.fighter.addhp(totalUp)
                     self.fighter.minusqi(qicost)  # 减气
                     print(f'{self.fighter.name}发动了五气连波技能，消耗{qicost}气，增加了{totalUp}精，当前精为{self.fighter.hp}')
-                    self.__turn = 'm'
+                    # self.__turn = 'm'
                     return True
 
             elif t == '4':
@@ -164,16 +193,16 @@ class Battle(object):
                     return False  # 返回战斗结束
                 else:
                     print('逃跑失败！')
-                    self.__turn = 'm'
+                    # self.__turn = 'm'
                     return True
             elif t == '5':
                 self.isflee = True  # 设定是逃跑的
-                self.moneyflee = True  # 设定是孤注一掷逃跑的
+                self.moneyflee = True  # 设定是烟雨夺魂逃跑的
                 return False
 
             else:
                 return True  # 如果输入错误也返回True，重新进行回合
-
+        # 怪物回合
         elif self.__turn == 'm':
             if self.isdone():
                 return False
@@ -186,13 +215,13 @@ class Battle(object):
                 time.sleep(1)
                 print(f'怪物回合，{self.monster.name}进行技能攻击')
                 self.monsterSkillAttackFighter()
-                self.__turn = 'f'  # 到武将的回合
+                # self.__turn = 'f'  # 到武将的回合
                 return True
             else:
                 time.sleep(1)
                 print(f'怪物回合，{self.monster.name}进行普通攻击')
                 self.monsterNormalAttackFigher()
-                self.__turn = 'f'  # 到武将的回合
+                # self.__turn = 'f'  # 到武将的回合
                 return True
         else:
             raise ValueError('self.__turn设置错误！')

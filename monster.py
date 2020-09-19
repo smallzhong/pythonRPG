@@ -1,4 +1,4 @@
-#coding:utf-8
+# coding:utf-8
 import json
 import pickle
 import logging
@@ -21,6 +21,15 @@ class Monster(object):
         self._name = kwargs['name']
         self._level = kwargs['level']
         self._cost = kwargs['cost']
+        self._speed = 50  # 默认攻击速度为50
+
+    @property
+    def speed(self):
+        return self._speed
+
+    @speed.setter
+    def speed(self, v):
+        self._speed = v
 
     @property
     def cost(self):
