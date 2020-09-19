@@ -339,9 +339,15 @@ if __name__ == '__main__':
             else:
                 g_userdata['hero'][res['name']]['qi'] = res['fighterqi']  # 设定武将的气，没有胜利的奖励
                 g_userdata['hero'][res['name']]['hp'] = res['fighterhp']  # 设定武将的精，没有胜利的奖励
-                print(f"您成功通过逃跑的方式结束战斗，当前精剩余{g_userdata['hero'][res['name']]['hp']}，"
-                      f"气剩余{g_userdata['hero'][res['name']]['qi']}。"
-                      f"下次打怪的时候要权衡实力呢，如果觉得打不过可以到商店买八公山豆腐补充精和气哦~")
+                if res['moneyflee']:
+                    g_userdata['money'] -= 200
+                    print(f'成功发动孤注一掷技能，消耗200金币，当前剩余{g_userdata["money"]}金币。')
+                    time.sleep(1)
+                print(
+                    f"您成功通过{'发动孤注一掷技能的方式' if res['moneyflee'] else '逃跑的方式'}结束战斗，"
+                    f"当前精剩余{g_userdata['hero'][res['name']]['hp']}，"
+                    f"气剩余{g_userdata['hero'][res['name']]['qi']}。"
+                    f"下次打怪的时候要权衡实力呢，如果觉得打不过可以到商店买八公山豆腐补充精和气哦~")
             del battle  # 删除战斗类，释放内存空间
         # 商店
         elif t == '2':

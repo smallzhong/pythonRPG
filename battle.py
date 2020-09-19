@@ -117,7 +117,9 @@ class Battle(object):
             if self.isdone():
                 return False
             time.sleep(1)
-            t = input('武将回合，请输入选择，1普通攻击，2技能攻击（消耗气），3技能补血（消耗气），4逃跑（一定概率失败），输入其他进行查看双方状态')
+            t = input('武将回合，请输入选择，1普通攻击，2技能攻击（消耗气），3技能补血（消耗气），4逃跑（一定概率失败），'
+                      '5孤注一掷（消耗200金币，逃跑一定成功），'
+                      '输入其他进行查看双方状态')
 
             if t == '1':
                 print(f'{self.fighter.name}进行普通攻击')
@@ -164,6 +166,10 @@ class Battle(object):
                     print('逃跑失败！')
                     self.__turn = 'm'
                     return True
+            elif t == '5':
+                self.isflee = True  # 设定是逃跑的
+                self.moneyflee = True  # 设定是孤注一掷逃跑的
+                return False
 
             else:
                 return True  # 如果输入错误也返回True，重新进行回合
@@ -227,9 +233,16 @@ class Battle(object):
             fighterhp = self.fighter.hp
             fighterqi = self.fighter.qi
             name = self.fighter.name  # 如果成功逃跑，则一定没有被打死，不用判断HP是否为0
+            try:
+                self.moneyflee
+            except AttributeError:
+                moneyflee = False
+            else:
+                moneyflee = True
             return {
                 "isflee": True,  # 如果是逃跑的，将isflee字段设置为True
                 "name": name,
                 "fighterhp": fighterhp,  # 结束后武将剩余的精
-                "fighterqi": fighterqi  # 结束后武将剩余的气
+                "fighterqi": fighterqi,  # 结束后武将剩余的气
+                "moneyflee": moneyflee
             }
