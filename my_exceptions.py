@@ -1,4 +1,4 @@
-#coding:utf-8
+# coding:utf-8
 # 用来实现类似goto的功能
 # https://stackoverflow.com/questions/438844/is-there-a-label-goto-in-python
 # try:
@@ -8,4 +8,8 @@
 # except BreakoutException:
 #     pass
 class BreakPointException(Exception):
+    pass
+
+
+class BreakPointException2(Exception):
     pass

@@ -3,7 +3,7 @@ import random
 import time
 import json
 import pickle
-from my_exceptions import BreakPointException
+from my_exceptions import BreakPointException, BreakPointException2
 from monster import Monster
 import os
 from fighter import Fighter
@@ -379,9 +379,11 @@ if __name__ == '__main__':
                                     t2 = int(t2)
                                     raise BreakPointException
                                 except ValueError:
-                                    raise BreakPointException
+                                    raise BreakPointException2
                         except BreakPointException:
                             pass
+                        except BreakPointException2:
+                            raise BreakPointException
                         # 防止输入数字错误
                         if t2 < 0 or t2 >= len(g_userdata['backpack']):
                             print('输入错误！没有这件武器！')
