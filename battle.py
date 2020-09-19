@@ -199,7 +199,7 @@ class Battle(object):
             elif t == '5':
                 if self.fighter.qi < 20:
                     print(f'{self.fighter.name}当前剩余气为{self.fighter.qi}，无法发动烟雨夺魂技能！逃跑失败，请重新选择动作！')
-                    self.notturnflag = True  # 不够金币则非正常退出
+                    self.notturnflag = True  # 不够气则非正常退出
                     return True
                 else:
                     self.isflee = True  # 设定是逃跑的
