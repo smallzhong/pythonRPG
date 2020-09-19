@@ -339,10 +339,12 @@ if __name__ == '__main__':
             else:
                 g_userdata['hero'][res['name']]['qi'] = res['fighterqi']  # 设定武将的气，没有胜利的奖励
                 g_userdata['hero'][res['name']]['hp'] = res['fighterhp']  # 设定武将的精，没有胜利的奖励
-                if res['moneyflee']:
-                    g_userdata['money'] -= 200
-                    print(f'成功发动烟雨夺魂技能，消耗200金币，当前剩余{g_userdata["money"]}金币。')
-                    time.sleep(1)
+                # if res['moneyflee']:
+                #     # g_userdata['money'] -= 200
+                #     # print(f'成功发动烟雨夺魂技能，消耗200金币，当前剩余{g_userdata["money"]}金币。')
+                #     # time.sleep(1)
+                #     time.sleep(1)
+                time.sleep(1)
                 print(
                     f"您成功通过{'发动烟雨夺魂技能的方式' if res['moneyflee'] else '逃跑的方式'}结束战斗，"
                     f"当前精剩余{g_userdata['hero'][res['name']]['hp']}，"
@@ -361,65 +363,65 @@ if __name__ == '__main__':
                     print(f'\t{ct}.{i["name"]}，出售价格{i["price"] // 2}，伤害区间{i["hurt"][0]}~{i["hurt"][1]}')
                     ct += 1
 
-        elif t == '3':
-            try:
-                while 1:
-                    t1 = input('1.查看所有武将的装备，2.更换云天河的装备，3.退出..(其他武将待添加)')
-                    if t1 == '1':
-                        for i in g_userdata['hero'].values():
-                            print(
-                                f'角色：{i["name"]}，装备：{list(i["equip"].keys())[0]}，'
-                                f'伤害加成：{i["equip"][list(i["equip"].keys())[0]][0]}~'
-                                f'{i["equip"][list(i["equip"].keys())[0]][1]}')
-                    elif t1 == '2':
-                        print(f'\t当前背包内共有{len(g_userdata["backpack"])}件物品')
-                        ct = 0
-                        for i in g_userdata['backpack']:
-                            print(f'\t{ct}.{i["name"]}，出售价格{i["price"] // 2}，伤害区间{i["hurt"][0]}~{i["hurt"][1]}')
-                            ct += 1
+elif t == '3':
+    try:
+        while 1:
+            t1 = input('1.查看所有武将的装备，2.更换云天河的装备，3.退出..(其他武将待添加)')
+            if t1 == '1':
+                for i in g_userdata['hero'].values():
+                    print(
+                        f'角色：{i["name"]}，装备：{list(i["equip"].keys())[0]}，'
+                        f'伤害加成：{i["equip"][list(i["equip"].keys())[0]][0]}~'
+                        f'{i["equip"][list(i["equip"].keys())[0]][1]}')
+            elif t1 == '2':
+                print(f'\t当前背包内共有{len(g_userdata["backpack"])}件物品')
+                ct = 0
+                for i in g_userdata['backpack']:
+                    print(f'\t{ct}.{i["name"]}，出售价格{i["price"] // 2}，伤害区间{i["hurt"][0]}~{i["hurt"][1]}')
+                    ct += 1
+                try:
+                    while 1:
+                        t2 = input('请输入您要装备的装备编号，输入任意非数字字符退出:')
+                        #  防止输入的不是一个数字
                         try:
-                            while 1:
-                                t2 = input('请输入您要装备的装备编号，输入任意非数字字符退出:')
-                                #  防止输入的不是一个数字
-                                try:
-                                    t2 = int(t2)
-                                    raise BreakPointException
-                                except ValueError:
-                                    raise BreakPointException2
-                        except BreakPointException:
-                            pass
-                        except BreakPointException2:
+                            t2 = int(t2)
                             raise BreakPointException
-                        # 防止输入数字错误
-                        if t2 < 0 or t2 >= len(g_userdata['backpack']):
-                            print('输入错误！没有这件武器！')
-                            continue
-                        else:
-                            g_userdata['hero']['云天河']['equip'] = {
-                                g_userdata['backpack'][t2]['name']: g_userdata['backpack'][t2]['hurt']}
-                            print(f"更换装备成功！云天河的装备已被成功换成{g_userdata['backpack'][t2]['name']}！")
-                    elif t1 == '3':
-                        raise BreakPointException
-                    else:
-                        continue
-            except BreakPointException:
-                pass
+                        except ValueError:
+                            raise BreakPointException2
+                except BreakPointException:
+                    pass
+                except BreakPointException2:
+                    raise BreakPointException
+                # 防止输入数字错误
+                if t2 < 0 or t2 >= len(g_userdata['backpack']):
+                    print('输入错误！没有这件武器！')
+                    continue
+                else:
+                    g_userdata['hero']['云天河']['equip'] = {
+                        g_userdata['backpack'][t2]['name']: g_userdata['backpack'][t2]['hurt']}
+                    print(f"更换装备成功！云天河的装备已被成功换成{g_userdata['backpack'][t2]['name']}！")
+            elif t1 == '3':
+                raise BreakPointException
+            else:
+                continue
+    except BreakPointException:
+        pass
 
-        elif t == '4':
-            get_in_store()
+elif t == '4':
+    get_in_store()
 
-        elif t == '5':
-            my_print_info()
+elif t == '5':
+    my_print_info()
 
-        elif t == '6':
-            save_file()
-            print(f'存档成功！')
+elif t == '6':
+    save_file()
+    print(f'存档成功！')
 
-        elif t == '7':
-            read_file(g_filepath)
-            my_print_info()
+elif t == '7':
+    read_file(g_filepath)
+    my_print_info()
 
-        elif t == '8':
-            sys.exit(0)
-        else:
-            pass
+elif t == '8':
+    sys.exit(0)
+else:
+    pass

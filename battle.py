@@ -145,7 +145,7 @@ class Battle(object):
                 return False
             time.sleep(1)
             t = input('武将回合，请输入选择，1普通攻击，2技能攻击（消耗气），3技能补血（消耗气），4逃跑（一定概率失败），'
-                      '5烟雨夺魂（消耗200金币，逃跑一定成功），'
+                      '5烟雨夺魂（消耗20气，逃跑一定成功），'
                       '输入其他进行查看双方状态')
 
             if t == '1':
@@ -187,6 +187,7 @@ class Battle(object):
 
             elif t == '4':
                 t = int(random.uniform(0, self.fighter.level + 2))  # 级数越高逃跑失败概率越小
+                time.sleep(1)
                 if t:
                     print('逃跑成功!')
                     self.isflee = True  # 设定是逃跑的
@@ -196,9 +197,15 @@ class Battle(object):
                     # self.__turn = 'm'
                     return True
             elif t == '5':
-                self.isflee = True  # 设定是逃跑的
-                self.moneyflee = True  # 设定是烟雨夺魂逃跑的
-                return False
+                if self.fighter.qi < 20:
+                    print(f'{self.fighter.name}当前剩余气为{self.fighter.qi}，无法发动烟雨夺魂技能！逃跑失败，请重新选择动作！')
+                    self.notturnflag = True  # 不够金币则非正常退出
+                    return True
+                else:
+                    self.isflee = True  # 设定是逃跑的
+                    self.moneyflee = True  # 设定是烟雨夺魂逃跑的
+                    self.fighter.minusqi(20)  # 减去烟雨夺魂使用的气逃跑一定成功
+                    return False
 
             else:
                 return True  # 如果输入错误也返回True，重新进行回合
