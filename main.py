@@ -374,6 +374,10 @@ if __name__ == '__main__':
                                 f'伤害加成：{i["equip"][list(i["equip"].keys())[0]][0]}~'
                                 f'{i["equip"][list(i["equip"].keys())[0]][1]}')
                     elif t1 == '2':
+                        # 如果背包里面没有东西直接返回
+                        if not len(g_userdata['backpack']):
+                            print('您的背包中没有可以装备的东西哦，去商店逛逛吧~')
+                            continue  # TODO:这里是continue还是raise，纠结。
                         print(f'\t当前背包内共有{len(g_userdata["backpack"])}件物品')
                         ct = 0
                         for i in g_userdata['backpack']:
