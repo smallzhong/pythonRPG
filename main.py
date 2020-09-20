@@ -255,6 +255,8 @@ if __name__ == '__main__':
 
         elif t == '2':
             name = input('请输入您的昵称')
+            if name == '':
+                continue
             t_filepath = name + '.txt'
             if os.path.exists(t_filepath):
                 print('此昵称已被注册！')
