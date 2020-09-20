@@ -90,7 +90,6 @@ class Battle(object):
         if c == "膝裂（降低怪物一半攻击速度）":
             self.monster.speed = self.monster.speed // 2
 
-
         print(f'云天河发动{c if c != "膝裂（降低怪物一半攻击速度）" else "膝裂"}技能对{self.monster.name}'
               f'造成{totalhurt}点伤害{"，并附加降低其50%攻击速度" if c == "膝裂（降低怪物一半攻击速度）" else ""}')
         return True
@@ -105,9 +104,9 @@ class Battle(object):
 
     # 武将普攻怪物
     def fighterNormalAttackMonster(self):
-        equitAddition = self.fighter.getequipaddition()
+        equipAddition = self.fighter.getequipaddition()
         baseHurt = self.fighter.level * 50 + 50  # 基本伤害 = (等级 + 1) * 50
-        totalHurt = equitAddition + baseHurt
+        totalHurt = equipAddition + baseHurt
         self.monster.minushp(totalHurt)  # 怪物减血
         time.sleep(1)  # 攻击的时候停顿一下，增加游戏体验
         print(f'\t{self.fighter.name}对{self.monster.name}发动普通攻击造成了{totalHurt}点伤害')
@@ -135,6 +134,8 @@ class Battle(object):
             else:
                 self.__turn = 'm'  # 如果当前怪物的时间槽走在前面，则怪物攻击
         else:
+            self.monster.speed -= 15  # 抵消外面的+15的影响
+            self.fighter.speed -= 15  # 抵消外面的+15的影响
             self.notturnflag = False  # 重置此flag，不做任何其他动作
 
     # 用来选择出招
@@ -198,7 +199,6 @@ class Battle(object):
                     return False  # 返回战斗结束
                 else:
                     print('逃跑失败！')
-                    # self.__turn = 'm'
                     return True
             elif t == '5':
                 if self.fighter.qi < 20:
@@ -212,6 +212,7 @@ class Battle(object):
                     return False
 
             else:
+                self.notturnflag = True  # 不改变出招方
                 return True  # 如果输入错误也返回True，重新进行回合
         # 怪物回合
         elif self.__turn == 'm':
@@ -226,13 +227,11 @@ class Battle(object):
                 time.sleep(1)
                 print(f'怪物回合，{self.monster.name}进行技能攻击')
                 self.monsterSkillAttackFighter()
-                # self.__turn = 'f'  # 到武将的回合
                 return True
             else:
                 time.sleep(1)
                 print(f'怪物回合，{self.monster.name}进行普通攻击')
                 self.monsterNormalAttackFigher()
-                # self.__turn = 'f'  # 到武将的回合
                 return True
         else:
             raise ValueError('self.__turn设置错误！')
