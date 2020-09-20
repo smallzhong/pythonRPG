@@ -23,11 +23,7 @@ class Fighter(object):
         self._cost = kwargs['cost']
         self._level = kwargs['level']
         self._exp = kwargs['exp']
-        self._speed = 50  # 默认武将的攻击速度也为50
-
-    @property
-    def speed(self):
-        return self._speed
+        self.speed = 50  # 默认武将的攻击速度也为50
 
     @property
     def exp(self):

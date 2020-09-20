@@ -86,12 +86,13 @@ class Battle(object):
         totalhurt = equipaddition + basehurt
         self.monster.minushp(totalhurt)
 
-        # 如果是膝裂技能则降低怪物攻击速度25
-        if c == "膝裂（降低怪物25攻击速度）":
+        # 如果是膝裂技能则降低怪物攻击速度50%
+        if c == "膝裂（降低怪物一半攻击速度）":
             self.monster.speed = self.monster.speed // 2
 
-        print(f'云天河发动{c if c != "膝裂（降低怪物25攻击速度）" else "膝裂"}技能对{self.monster.name}'
-              f'造成{totalhurt}点伤害{"，并附加降低其25攻击速度" if c == "膝裂（降低怪物25攻击速度）" else ""}')
+
+        print(f'云天河发动{c if c != "膝裂（降低怪物一半攻击速度）" else "膝裂"}技能对{self.monster.name}'
+              f'造成{totalhurt}点伤害{"，并附加降低其25攻击速度" if c == "膝裂（降低怪物一半攻击速度）" else ""}')
         return True
 
     def monsterSkillAttackFighter(self):
@@ -122,6 +123,10 @@ class Battle(object):
     # 用来更新时间槽，判断当前应该轮到怪物出招还是武将出招
     def setturn(self):
         # 如果没有出现特殊情况
+        # 每次都增加15，防止在使用膝裂后怪物无法发动攻击，让玩家不断发动膝裂才能一直降低怪物攻击速度
+        self.monster.speed += 15
+        self.fighter.speed += 15
+        print(f'武将攻击速度{self.fighter.speed}，怪物攻击速度{self.monster.speed}')
         if not self.notturnflag:
             if self.__turn == 'f':
                 self.__monsterrun += self.monster.speed
